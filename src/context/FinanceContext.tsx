@@ -1,10 +1,22 @@
-import { createContext, useEffect, useState } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useEffect, useState } from 'react';
 
-type CategoryType = 'Entertainment' | 'Food';
-type TransactionType = 'Income' | 'Expense';
+export const CATEGORIES = ['Food', 'Entertainment', 'Movie'];
+export type CategoryType = (typeof CATEGORIES)[number];
+
+export const EXPENSE_CATEGORIES = ['Food', 'Entertainment', 'Movie'];
+export type ExpenseCategory = (typeof EXPENSE_CATEGORIES)[number];
+
+export const INCOME_CATEGORIES = ['Salary', 'Freelance', 'Bonus'];
+export type IncomeCategory = (typeof INCOME_CATEGORIES)[number];
+
+export const TRANSACTION_TYPES = ['Income', 'Expense'];
+export type TransactionType = (typeof TRANSACTION_TYPES)[number];
 
 type TransactionItem = {
   id: string;
+  description: string;
   amount: number;
   category: CategoryType;
   type: TransactionType;
@@ -14,92 +26,85 @@ type TransactionItem = {
 interface FinanceContextType {
   transactions: TransactionItem[];
   balance: number;
-  addTransaction: (transaction: TransactionItem) => void;
+  addTransaction: (transaction: Omit<TransactionItem, 'id'>) => void;
   removeTransaction: (id: string) => void;
 }
-const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
+
+// Default initial values
+const defaultTransactions: TransactionItem[] = [
+  {
+    id: 'seed-1', // simple fixed IDs for seed data
+    description: 'Grocery',
+    amount: 250,
+    type: 'Income',
+    category: 'Food',
+    date: '2025-12-01',
+  },
+  {
+    id: 'seed-2',
+    description: 'Grocery',
+    amount: 80,
+    type: 'Expense',
+    category: 'Food',
+    date: '2025-12-01',
+  },
+  {
+    id: 'seed-3',
+    description: 'Grocery',
+    amount: 15.5,
+    type: 'Expense',
+    category: 'Food',
+    date: '2025-12-01',
+  },
+  {
+    id: 'seed-4',
+    description: 'Grocery',
+    amount: 60,
+    type: 'Expense',
+    category: 'Entertainment',
+    date: '2025-12-01',
+  },
+  {
+    id: 'seed-5',
+    description: 'Grocery',
+    amount: 35,
+    type: 'Expense',
+    category: 'Food',
+    date: '2025-12-01',
+  },
+];
+
+export const financeContext = createContext<FinanceContextType | undefined>(
+  undefined
+);
 
 const FINANCE_STORAGE_KEY = 'finance';
 
-function FinanceProvider({ children }: { children: React.ReactNode }) {
-  const [transactions, setTransactions] = useState<TransactionItem[]>([]);
+export function FinanceProvider({ children }: { children: React.ReactNode }) {
+  const [transactions, setTransactions] =
+    useState<TransactionItem[]>(defaultTransactions);
 
   // Calculate balance from transactions
   const balance = transactions.reduce((acc, t) => {
-    return t.type === 'Income' ? acc + t.amount : acc - t.amount;
+    return acc + t.amount;
   }, 0);
 
   // Load from localStorage on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // First time: seed with default data
-    const defaultTransactions: TransactionItem[] = [
-      {
-        id: 'seed-1', // simple fixed IDs for seed data
-        amount: 2500,
-        type: 'Income',
-        category: 'Food',
-        date: new Date('2025-12-01').toISOString(),
-      },
-      {
-        id: 'seed-2',
-        amount: 80,
-        type: 'Expense',
-        category: 'Food',
-        date: new Date('2025-12-12').toISOString(),
-      },
-      {
-        id: 'seed-3',
-        amount: 15.5,
-        type: 'Expense',
-        category: 'Food',
-        date: new Date('2025-12-08').toISOString(),
-      },
-      {
-        id: 'seed-4',
-        amount: 60,
-        type: 'Expense',
-        category: 'Entertainment',
-        date: new Date('2025-12-05').toISOString(),
-      },
-      {
-        id: 'seed-5',
-        amount: 35,
-        type: 'Expense',
-        category: 'Food',
-        date: new Date('2025-11-25').toISOString(),
-      },
-      {
-        id: 'seed-6',
-        amount: 120,
-        type: 'Expense',
-        category: 'Entertainment',
-        date: new Date('2025-12-10').toISOString(),
-      },
-    ];
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTransactions(defaultTransactions);
-    localStorage.setItem(
-      FINANCE_STORAGE_KEY,
-      JSON.stringify(defaultTransactions)
-    );
     try {
       const stored = localStorage.getItem(FINANCE_STORAGE_KEY);
-
       if (stored) {
         const parsed: TransactionItem[] = JSON.parse(stored);
         setTransactions(parsed);
       }
     } catch (error) {
       console.error('Failed to load or seed transactions:', error);
-      // Fallback: start empty if something went wrong
-      setTransactions([]);
     }
   }, []);
 
-  // Save to localStorage whenever it changes
+  // Sync to localStorage whenever it changes
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -110,14 +115,13 @@ function FinanceProvider({ children }: { children: React.ReactNode }) {
     }
   }, [transactions]);
 
-  const addTransaction = (newTransaction: TransactionItem) => {
-    const transactionWithMeta: TransactionItem = {
-      ...newTransaction,
+  const addTransaction = (newTransaction: Omit<TransactionItem, 'id'>) => {
+    const transaction: TransactionItem = {
       id: crypto.randomUUID(), // generates unique ID
-      date: new Date().toISOString(),
+      ...newTransaction,
     };
 
-    setTransactions((prev) => [...prev, transactionWithMeta]);
+    setTransactions((prev) => [...prev, transaction]);
   };
 
   const removeTransaction = (id: string) => {
@@ -125,12 +129,18 @@ function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <FinanceContext.Provider
+    <financeContext.Provider
       value={{ transactions, balance, addTransaction, removeTransaction }}
     >
       {children}
-    </FinanceContext.Provider>
+    </financeContext.Provider>
   );
 }
 
-export { FinanceContext, FinanceProvider };
+export function useFinance(): FinanceContextType {
+  const context = useContext(financeContext);
+  if (!context) {
+    throw new Error('useFinance must be used within FinanceProvider');
+  }
+  return context;
+}
