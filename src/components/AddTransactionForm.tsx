@@ -5,12 +5,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useCategory, type CategoryItem } from '@/context/categoryContext';
 import {
-  CATEGORIES,
   TRANSACTION_TYPES,
-  type CategoryType,
   type TransactionType,
-} from '@/context/financeContext';
+} from '@/context/transactionContext';
 import { formatDateToYYYYMMDD } from '@/lib/helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
@@ -47,7 +46,7 @@ type AddTransactionFormProps = {
     description: string;
     amount: string;
     type: TransactionType;
-    category: CategoryType;
+    category: CategoryItem;
     date: Date;
   }) => void;
   onCancel: () => void;
@@ -58,7 +57,7 @@ const AddTransactionForm = ({
   onCancel,
 }: AddTransactionFormProps) => {
   const [calenderOpen, setCalenderOpen] = useState(false);
-
+  const { categories } = useCategory();
   const formSchema = z.object({
     description: z.string().min(1, 'Description must be at least 1 character.'),
     type: z.enum(TRANSACTION_TYPES as [TransactionType, ...TransactionType[]], {
@@ -69,9 +68,14 @@ const AddTransactionForm = ({
       .min(1, { message: 'Amount is required' })
       .transform((val) => Number(val))
       .pipe(z.number().min(1, { message: 'Amount must be at least 1' })),
-    category: z.enum(CATEGORIES as [CategoryType, ...CategoryType[]], {
-      error: 'Please select a category.',
-    }),
+    category: z
+      .object({
+        id: z.string(),
+        name: z.string(),
+      })
+      .refine((obj) => categories.some((c) => c.id === obj.id), {
+        message: 'Please select a category.',
+      }),
     date: z.date({ error: 'Please select a date.' }),
   });
 
@@ -81,7 +85,7 @@ const AddTransactionForm = ({
       description: '',
       amount: '',
       type: undefined,
-      category: undefined,
+      category: {},
       date: new Date(), // today by default
     },
   });
@@ -150,7 +154,6 @@ const AddTransactionForm = ({
               </FieldSet>
             )}
           />
-   
 
           {/* Description */}
           <Controller
@@ -173,7 +176,6 @@ const AddTransactionForm = ({
               </Field>
             )}
           />
-      
 
           {/* Amount */}
           <Controller
@@ -197,7 +199,6 @@ const AddTransactionForm = ({
               </Field>
             )}
           />
-   
 
           {/* Category */}
           <Controller
@@ -206,7 +207,13 @@ const AddTransactionForm = ({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>Category</FieldLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={(value) => {
+                    const selected = categories.find((c) => c.id === value);
+                    if (selected) field.onChange(selected);
+                  }}
+                  value={field.value?.id}
+                >
                   <SelectTrigger
                     className={`${
                       fieldState.invalid &&
@@ -217,9 +224,9 @@ const AddTransactionForm = ({
                   </SelectTrigger>
                   <SelectContent position='popper'>
                     <SelectGroup>
-                      {CATEGORIES.map((c) => (
-                        <SelectItem key={c} value={c}>
-                          {c}
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -231,7 +238,6 @@ const AddTransactionForm = ({
               </Field>
             )}
           />
-    
 
           {/* Date */}
           <Controller

@@ -7,11 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useFinance } from '@/context/financeContext';
+import { useTransaction } from '@/context/transactionContext';
 
 const TransactionTable = () => {
-  const { transactions,balance } = useFinance();
-
+  const { transactions, balance } = useTransaction();
 
   const sign = (amount: number): string => {
     return amount < 0 ? `$${amount}` : `+$${amount}`;
@@ -32,7 +31,7 @@ const TransactionTable = () => {
           <TableRow key={item.id}>
             <TableCell>{item.description}</TableCell>
             <TableCell>{item.date}</TableCell>
-            <TableCell>{item.category}</TableCell>
+            <TableCell>{item.category.name}</TableCell>
             <TableCell className='text-right'>{sign(item.amount)}</TableCell>
           </TableRow>
         ))}

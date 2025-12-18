@@ -1,10 +1,7 @@
 import { useState } from 'react';
 
-import {
-  useFinance,
-  type CategoryType,
-  type TransactionType,
-} from '@/context/financeContext';
+import type { CategoryItem } from '@/context/categoryContext';
+import { useTransaction, type TransactionType } from '@/context/transactionContext';
 import { formatDateToYYYYMMDD, getSignedAmount } from '@/lib/helpers';
 import { Plus } from 'lucide-react';
 import AddTransactionForm from './AddTransactionForm';
@@ -14,13 +11,13 @@ import { Dialog, DialogTrigger } from './ui/dialog';
 const AddTransactionButton = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { addTransaction } = useFinance();
+  const { addTransaction } = useTransaction();
 
   const handleSubmit = (data: {
     description: string;
     amount: string;
     type: TransactionType;
-    category: CategoryType;
+    category: CategoryItem;
     date: Date;
   }) => {
     addTransaction({

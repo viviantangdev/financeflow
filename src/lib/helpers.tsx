@@ -1,10 +1,12 @@
-import type { TransactionType } from "@/context/financeContext";
-import { format } from "date-fns";
+import type { TransactionType } from '@/context/transactionContext';
+import { format } from 'date-fns';
 
 export function formatDate(dateString: string) {
   return format(new Date(dateString), 'yyyy-MM-dd');
 }
-export function formatDateToYYYYMMDD(dateInput: Date | string | number): string {
+export function formatDateToYYYYMMDD(
+  dateInput: Date | string | number
+): string {
   const date = new Date(dateInput);
 
   // Check if date is valid
@@ -19,6 +21,9 @@ export function formatDateToYYYYMMDD(dateInput: Date | string | number): string 
   return `${year}-${month}-${day}`;
 }
 
-export const getSignedAmount = (amount: number, type: TransactionType): number => {
+export const getSignedAmount = (
+  amount: number,
+  type: TransactionType
+): number => {
   return type === 'Expense' ? -amount : amount;
 };
