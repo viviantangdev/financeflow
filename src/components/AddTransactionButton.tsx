@@ -1,16 +1,16 @@
-import { useState } from 'react';
-
 import type { CategoryItem } from '@/context/categoryContext';
-import { useTransaction, type TransactionType } from '@/context/transactionContext';
+import {
+  useTransaction,
+  type TransactionType,
+} from '@/context/transactionContext';
+import { useDialog } from '@/hooks/useDialog';
 import { formatDateToYYYYMMDD, getSignedAmount } from '@/lib/helpers';
-import { Plus } from 'lucide-react';
+import { ActionButton } from './ActionButton';
 import AddTransactionForm from './AddTransactionForm';
-import { Button } from './ui/button';
 import { Dialog, DialogTrigger } from './ui/dialog';
 
 const AddTransactionButton = () => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
+  const { isDialogOpen, setIsDialogOpen } = useDialog();
   const { addTransaction } = useTransaction();
 
   const handleSubmit = (data: {
@@ -28,23 +28,20 @@ const AddTransactionButton = () => {
       date: formatDateToYYYYMMDD(data.date),
     });
 
-    setDialogOpen(false);
+    setIsDialogOpen(false);
   };
 
   const handleCancel = () => {
-    setDialogOpen(false);
+    setIsDialogOpen(false);
   };
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button type='button' variant={'default'} size={'lg'}>
-          <Plus />
-          Add transaction
-        </Button>
+        <ActionButton text='Add transaction' />
       </DialogTrigger>
 
-      {dialogOpen && (
+      {isDialogOpen && (
         <AddTransactionForm onSubmit={handleSubmit} onCancel={handleCancel} />
       )}
     </Dialog>
