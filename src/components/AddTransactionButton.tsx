@@ -7,7 +7,13 @@ import { useDialog } from '@/hooks/useDialog';
 import { formatDateToYYYYMMDD, getSignedAmount } from '@/lib/helpers';
 import { ActionButton } from './ActionButton';
 import AddTransactionForm from './AddTransactionForm';
-import { Dialog, DialogTrigger } from './ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 
 const AddTransactionButton = () => {
   const { isDialogOpen, setIsDialogOpen } = useDialog();
@@ -40,10 +46,12 @@ const AddTransactionButton = () => {
       <DialogTrigger asChild>
         <ActionButton text='Add transaction' />
       </DialogTrigger>
-
-      {isDialogOpen && (
+      <DialogContent className='sm:max-w-106'>
+        <DialogHeader>
+          <DialogTitle className='uppercase'>Add transaction</DialogTitle>
+        </DialogHeader>
         <AddTransactionForm onSubmit={handleSubmit} onCancel={handleCancel} />
-      )}
+      </DialogContent>
     </Dialog>
   );
 };
