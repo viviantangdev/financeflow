@@ -7,11 +7,17 @@ import {
 } from '@/context/transactionContext';
 import { formatDateToYYYYMMDD } from '@/lib/helpers';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
-import { ChevronDownIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from './ui/collapsible';
 import {
   Field,
   FieldContent,
@@ -29,9 +35,11 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Separator } from './ui/separator';
 
 type TransactionFormProps = {
   transaction?: TransactionItem; // undefined = new, provided = edit mode
@@ -45,7 +53,9 @@ const TransactionForm = ({
   onCancel,
 }: TransactionFormProps) => {
   const [calenderOpen, setCalenderOpen] = useState(false);
-  const { categories } = useCategory();
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const { categories, addCategory } = useCategory();
+  const [newCategory, setNewCategory] = useState('');
 
   const {
     register,
@@ -86,7 +96,7 @@ const TransactionForm = ({
         amount: '',
         type: undefined,
         category: undefined,
-        date: new Date(),
+        date: new Date(), // todays date
       });
     }
   }, [transaction, reset]);
@@ -105,6 +115,15 @@ const TransactionForm = ({
       type: data.type,
       date: formatDateToYYYYMMDD(data.date),
     });
+  };
+
+  const toggleShowAddCategory = () => {
+    setShowAddCategory(!showAddCategory);
+  };
+
+  const handleAddCategory = () => {
+    addCategory({ name: newCategory });
+    toggleShowAddCategory();
   };
 
   return (
@@ -204,6 +223,7 @@ const TransactionForm = ({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel>Category</FieldLabel>
+
               <Select
                 onValueChange={(value) => {
                   const selected = categories.find((c) => c.id === value);
@@ -212,16 +232,85 @@ const TransactionForm = ({
                 value={field.value?.id ?? ''}
               >
                 <SelectTrigger
-                  className={
-                    fieldState.invalid
-                      ? 'border-destructive focus-visible:ring-destructive'
-                      : ''
+                  className={`${
+                    fieldState.invalid &&
+                    'border-destructive focus-visible:ring-destructive'
                   }
+                      `}
                 >
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent position='popper'>
+                  <Collapsible
+                    open={showAddCategory}
+                    onOpenChange={toggleShowAddCategory}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        className='w-full flex justify-between p-2'
+                      >
+                        <div className='flex items-center gap-1'>
+                          <Plus />
+                          <span>Create category</span>
+                        </div>
+                        <motion.div
+                          animate={{ rotate: showAddCategory ? 180 : 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          style={{ originY: 'center', originX: 'center' }}
+                        >
+                          <ChevronDown className='h-4 w-4 opacity-50' />
+                        </motion.div>{' '}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent forceMount>
+                      <AnimatePresence initial={false}>
+                        {showAddCategory && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{
+                              height: { duration: 0.25, ease: 'easeInOut' },
+                              opacity: { duration: 0.2 },
+                            }}
+                            className='overflow-hidden'
+                          >
+                            <div className='space-y-3 p-5'>
+                              <Input
+                                placeholder='New category name'
+                                autoFocus
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Escape') {
+                                    setShowAddCategory(false);
+                                  }
+                                }}
+                              />
+                              <div className='flex gap-2'>
+                                <Button size='sm' onClick={handleAddCategory}>
+                                  Create
+                                </Button>
+                                <Button
+                                  size='sm'
+                                  variant='outline'
+                                  onClick={() => setShowAddCategory(false)}
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  <Separator />
                   <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
                     {categories.map((c) => (
                       <SelectItem key={c.id} value={c.id}>
                         {c.name}
@@ -287,7 +376,7 @@ const TransactionForm = ({
           disabled={isSubmitting}
           className='w-full'
         >
-          Save
+          {transaction ? 'Update' : 'Save'}
         </Button>
         <Button
           type='button'

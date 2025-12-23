@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useTransaction } from '@/context/transactionContext';
-import { Edit2 } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import { TransactionDialog } from './TransactionDialog';
 
 const TransactionTable = () => {
@@ -37,7 +37,7 @@ const TransactionTable = () => {
             <TableCell>{item.category.name}</TableCell>
             <TableCell className='text-right'>{sign(item.amount)}</TableCell>
             <TableCell>
-              <TransactionDialog trigger={<Edit2 />} transaction={item} />
+              <TransactionDialog trigger={<Edit />} transaction={item} />
             </TableCell>
           </TableRow>
         ))}

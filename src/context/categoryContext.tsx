@@ -3,16 +3,19 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import type React from 'react';
 import { createContext, useContext } from 'react';
 
-export type CategoryItem = {
-  id: string;
+export interface CategoryBase {
   name: string;
-};
+}
+
+export interface CategoryItem extends CategoryBase {
+  id: string;
+}
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [{ id: '1', name: 'Salary' }];
 
 interface CategoryContextType {
   categories: CategoryItem[];
-  addCategory: (category: Omit<CategoryItem, 'id'>) => void;
+  addCategory: (category: CategoryBase) => void;
   updateCategory: (id: string, updates: Partial<CategoryItem>) => void;
   deleteCategory: (id: string) => void;
 }
@@ -27,7 +30,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
     DEFAULT_CATEGORIES
   );
 
-  const addCategory = (newCategory: Omit<CategoryItem, 'id'>) => {
+  const addCategory = (newCategory: CategoryBase) => {
     const category: CategoryItem = {
       id: crypto.randomUUID(), // generates unique ID
       ...newCategory,
