@@ -6,14 +6,17 @@ import type { CategoryItem } from './categoryContext';
 export const TRANSACTION_TYPES = ['Income', 'Expense'];
 export type TransactionType = (typeof TRANSACTION_TYPES)[number];
 
-type TransactionItem = {
-  id: string;
+export interface TransactionBase {
   description: string;
   amount: number;
   category: CategoryItem;
   type: TransactionType;
   date: string;
-};
+}
+
+export interface TransactionItem extends TransactionBase {
+  id: string;
+}
 
 // Default initial values
 const DEFAULT_TRANSACTIONS: TransactionItem[] = [
