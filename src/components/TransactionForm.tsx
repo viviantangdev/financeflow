@@ -143,13 +143,13 @@ const TransactionForm = ({
                 value={field.value ?? ''}
                 onValueChange={field.onChange}
                 orientation='horizontal'
-                className={`flex flex-row ${
+                className={`flex flex-row  ${
                   fieldState.invalid &&
                   'border-destructive border rounded-md p-2'
                 }`}
               >
                 {TRANSACTION_TYPES.map((t) => (
-                  <FieldLabel key={t} htmlFor={t}>
+                  <FieldLabel key={t} htmlFor={t} className='cursor-pointer'>
                     <Field
                       orientation='horizontal'
                       data-invalid={fieldState.invalid}
@@ -157,7 +157,7 @@ const TransactionForm = ({
                       <FieldContent>
                         <FieldTitle>{t}</FieldTitle>
                       </FieldContent>
-                      <RadioGroupItem value={t} id={t} />
+                      <RadioGroupItem value={t} id={t} className='radioItem'/>
                     </Field>
                   </FieldLabel>
                 ))}
@@ -235,12 +235,11 @@ const TransactionForm = ({
                   className={`${
                     fieldState.invalid &&
                     'border-destructive focus-visible:ring-destructive'
-                  }
-                      `}
+                  }`}
                 >
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
-                <SelectContent position='popper'>
+                <SelectContent align='end' position='popper' >
                   <Collapsible
                     open={showAddCategory}
                     onOpenChange={toggleShowAddCategory}
@@ -261,7 +260,7 @@ const TransactionForm = ({
                           style={{ originY: 'center', originX: 'center' }}
                         >
                           <ChevronDown className='h-4 w-4 opacity-50' />
-                        </motion.div>{' '}
+                        </motion.div>
                       </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent forceMount>
@@ -353,7 +352,7 @@ const TransactionForm = ({
                     <ChevronDownIcon />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className='w-auto p-0' align='start'>
+                <PopoverContent  align='end' side='bottom'>
                   <Calendar
                     mode='single'
                     selected={field.value}
@@ -374,7 +373,7 @@ const TransactionForm = ({
           type='submit'
           variant='default'
           disabled={isSubmitting}
-          className='w-full'
+          className='w-full primaryButton'
         >
           {transaction ? 'Update' : 'Save'}
         </Button>

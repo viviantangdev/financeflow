@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -115,17 +115,41 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 transition duration-200 scroll-auto;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gray-50 text-black;
+    @variant dark {
+      @apply bg-zinc-900 text-white;
+    }
   }
 }
 
-
 @layer utilities {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     @apply appearance-none;
+  }
+}
+button{
+  @apply cursor-pointer;
+}
+.primaryButton {
+  @apply bg-emerald-500;
+  &:hover {
+    @apply bg-emerald-600;
+  }
+  @variant dark {
+    @apply bg-emerald-500;
+    &:hover {
+      @apply bg-emerald-600;
+    }
+  }
+}
+
+.radioItem {
+  @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
+  @variant dark {
+    @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
   }
 }
