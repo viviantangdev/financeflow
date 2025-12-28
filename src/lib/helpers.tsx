@@ -1,24 +1,8 @@
 import type { TransactionType } from '@/context/transactionContext';
 import { format } from 'date-fns';
 
-export function formatDate(dateString: string) {
+export function getFormatDate(dateString: string) {
   return format(new Date(dateString), 'yyyy-MM-dd');
-}
-export function formatDateToYYYYMMDD(
-  dateInput: Date | string | number
-): string {
-  const date = new Date(dateInput);
-
-  // Check if date is valid
-  if (isNaN(date.getTime())) {
-    throw new Error('Invalid date provided to formatDateToYYYYMMDD');
-  }
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
 }
 
 export const getSignedAmount = (
@@ -26,4 +10,22 @@ export const getSignedAmount = (
   type: TransactionType
 ): number => {
   return type === 'Expense' ? -amount : amount;
+};
+
+export const getFormatNumber = (value: number): string => {
+  const absValue = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+
+  if (absValue >= 1_000_000_000) {
+    return (
+      sign + (absValue / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B'
+    );
+  }
+  if (absValue >= 1_000_000) {
+    return sign + (absValue / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (absValue >= 1_000) {
+    return sign + (absValue / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+  }
+  return sign + absValue.toString();
 };

@@ -118,9 +118,9 @@
     @apply border-border outline-ring/50 transition duration-200 scroll-auto;
   }
   body {
-    @apply bg-gray-50 text-black;
+    @apply bg-neutral-50 text-black;
     @variant dark {
-      @apply bg-zinc-900 text-white;
+      @apply bg-neutral-800 text-white;
     }
   }
 }
@@ -146,6 +146,7 @@ button{
     }
   }
 }
+
 
 .radioItem {
   @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;

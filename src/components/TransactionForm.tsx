@@ -5,7 +5,7 @@ import {
   type TransactionItem,
   type TransactionType,
 } from '@/context/transactionContext';
-import { formatDateToYYYYMMDD } from '@/lib/helpers';
+import { getFormatDate } from '@/lib/helpers';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
@@ -113,7 +113,7 @@ const TransactionForm = ({
       amount: Number(data.amount),
       category: data.category,
       type: data.type,
-      date: formatDateToYYYYMMDD(data.date),
+      date: getFormatDate(data.date),
     });
   };
 
@@ -157,7 +157,7 @@ const TransactionForm = ({
                       <FieldContent>
                         <FieldTitle>{t}</FieldTitle>
                       </FieldContent>
-                      <RadioGroupItem value={t} id={t} className='radioItem'/>
+                      <RadioGroupItem value={t} id={t} className='radioItem' />
                     </Field>
                   </FieldLabel>
                 ))}
@@ -239,7 +239,7 @@ const TransactionForm = ({
                 >
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
-                <SelectContent align='end' position='popper' >
+                <SelectContent align='end' position='popper'>
                   <Collapsible
                     open={showAddCategory}
                     onOpenChange={toggleShowAddCategory}
@@ -345,14 +345,12 @@ const TransactionForm = ({
                     }`}
                   >
                     <span>
-                      {field.value
-                        ? formatDateToYYYYMMDD(field.value)
-                        : 'Pick a date'}
+                      {field.value ? getFormatDate(field.value) : 'Pick a date'}
                     </span>
                     <ChevronDownIcon />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent  align='end' side='bottom'>
+                <PopoverContent align='end' side='bottom'>
                   <Calendar
                     mode='single'
                     selected={field.value}
