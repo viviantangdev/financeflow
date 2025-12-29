@@ -65,12 +65,10 @@ export const NavigationAppbar = () => {
                   </NavigationMenuItem>
                 );
               })}
-              {/* <NavigationMenuLink asChild>Link</NavigationMenuLink> */}
             </NavigationMenuList>
           </NavigationMenu>
 
           <SheetFooter>
-            {' '}
             <button
               onClick={() => {
                 toggleTheme();

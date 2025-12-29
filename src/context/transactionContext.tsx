@@ -33,6 +33,8 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
 interface TransactionContextType {
   transactions: TransactionItem[];
   balance: number;
+  income: number;
+  expense: number;
   addTransaction: (transaction: Omit<TransactionItem, 'id'>) => void;
   updateTransaction: (id: string, updates: Partial<TransactionItem>) => void;
   deleteTransaction: (id: string) => void;
@@ -56,6 +58,18 @@ export function TransactionProvider({
   const balance = transactions.reduce((acc, t) => {
     return acc + t.amount;
   }, 0);
+
+  // Calculate income from transactions
+  const income = transactions
+    .filter((income) => income.type === 'Income')
+    .reduce((sum, income) => sum + income.amount, 0);
+    
+  // Calculate expense from transactions
+  const expense = Math.abs(
+    transactions
+      .filter((expense) => expense.type === 'Expense')
+      .reduce((sum, expense) => sum + expense.amount, 0)
+  );
 
   const addTransaction = (newTransaction: Omit<TransactionItem, 'id'>) => {
     const transaction: TransactionItem = {
@@ -81,6 +95,7 @@ export function TransactionProvider({
       value={{
         transactions,
         balance,
+        income, expense,
         addTransaction,
         updateTransaction,
         deleteTransaction,

@@ -1,3 +1,9 @@
+import TransactionTable from '@/components/TransactionTable';
+
 export const Transaction = () => {
-  return <div>Transaction</div>;
+  return (
+    <section className='shadow-sm '>
+      <TransactionTable />
+    </section>
+  );
 };
