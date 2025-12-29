@@ -55,9 +55,7 @@ export const NavigationAppbar = () => {
                       onClick={handleClose}
                       className={({ isActive }) =>
                         `flex items-center gap-3 rounded-md px-3 py-2.5 text-lg transition-colors ${
-                          isActive
-                            ? 'bg-accent font-semibold text-accent-foreground'
-                            : 'hover:bg-accent/50'
+                          isActive && 'bg-accent font-semibold'
                         }`
                       }
                     >

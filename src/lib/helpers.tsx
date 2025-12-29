@@ -1,8 +1,8 @@
 import type { TransactionType } from '@/context/transactionContext';
 import { format } from 'date-fns';
 
-export function getFormatDate(dateString: string) {
-  return format(new Date(dateString), 'yyyy-MM-dd');
+export function getFormatDate(date: Date) {
+  return format(new Date(date), 'yyyy-MM-dd');
 }
 
 export const getSignedAmount = (

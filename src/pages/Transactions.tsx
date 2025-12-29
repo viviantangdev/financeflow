@@ -1,6 +1,6 @@
 import TransactionTable from '@/components/TransactionTable';
 
-export const Transaction = () => {
+export const Transactions = () => {
   return (
     <section className='shadow-sm '>
       <TransactionTable />

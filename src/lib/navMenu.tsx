@@ -1,5 +1,5 @@
 import Dashboard from '@/pages/Dashboard';
-import { Transaction } from '@/pages/Transaction';
+import { Transactions } from '@/pages/Transactions';
 import { LayoutDashboard, Wallet, type LucideIcon } from 'lucide-react';
 import type React from 'react';
 
@@ -19,9 +19,9 @@ export const NavMenu: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Transaction',
-    href: '/transaction',
-    element: <Transaction />,
+    title: 'Transactions',
+    href: '/transactions',
+    element: <Transactions />,
     icon: Wallet ,
   },
 ];

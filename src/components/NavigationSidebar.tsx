@@ -51,7 +51,7 @@ export const NavigationSidebar = () => {
                         to={item.href}
                         end
                         className={`flex items-center gap-3 w-full ${
-                          isActive && 'font-semibold '
+                          isActive && 'bg-accent font-semibold'
                         }`}
                       >
                         <item.icon
