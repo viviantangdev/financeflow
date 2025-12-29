@@ -1,19 +1,14 @@
 import { useTheme } from '@/context/themeContext';
 import { NavMenu } from '@/lib/navMenu';
-import { Menu, MoonIcon, Star, SunIcon } from 'lucide-react';
+import { Menu, MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from './ui/navigation-menu';
+import { TransactionDialog } from './TransactionDialog';
+import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import {
   Sheet,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -43,43 +38,74 @@ export const NavigationAppbar = () => {
             <SheetTitle>FinanceFlow</SheetTitle>
           </SheetHeader>
           <Separator />
-
-          <NavigationMenu className='block'>
-            <NavigationMenuList className='flex flex-col'>
-              {NavMenu.map((item) => {
-                const isActive = location.pathname === item.href;
-                return (
-                  <NavigationMenuItem asChild key={item.title}>
-                    <NavigationMenuLink>
-                      <NavLink
-                        to={item.href}
-                        onClick={handleClose}
-                        className={`flex gap-1 items-center ${
-                          isActive && 'text-red-300'
+          <section className='p-3 space-y-6'>
+            {/* Navigation Section */}
+            <div>
+              <Label className='text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                Navigation
+              </Label>
+              <div className='mt-4 space-y-2'>
+                {NavMenu.map((item) => {
+                  const isActive = location.pathname === item.href;
+                  return (
+                    <NavLink
+                      key={item.title}
+                      to={item.href}
+                      end
+                      onClick={handleClose}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 rounded-md px-3 py-2.5 text-lg transition-colors ${
+                          isActive
+                            ? 'bg-accent font-semibold text-accent-foreground'
+                            : 'hover:bg-accent/50'
+                        }`
+                      }
+                    >
+                      <item.icon
+                        className={`h-5 w-5 ${
+                          isActive ? 'text-emerald-500' : ''
                         }`}
-                      >
-                        <item.icon size={20} />
-                        {item.title}
-                      </NavLink>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                );
-              })}
-            </NavigationMenuList>
-          </NavigationMenu>
-
-          <SheetFooter>
-            <button
-              onClick={() => {
-                toggleTheme();
-                handleClose();
-              }}
-              className='flex gap-1'
-            >
-              {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-              <span>Switch theme</span>
-            </button>
-          </SheetFooter>
+                      />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+            {/* Quick Actions Section */}
+            <div>
+              <Label className='text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                Quick Actions
+              </Label>
+              <div className='mt-4 space-y-2'>
+                <TransactionDialog
+                  trigger={
+                    <button className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'>
+                      <Plus className='h-5 w-5' />
+                      <span>Create transaction</span>
+                    </button>
+                  }
+                />
+              </div>
+            </div>
+            {/* Settings Section */}
+            <div>
+              <Label className='text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                Settings
+              </Label>
+              <div className='mt-4 space-y-2'>
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                  }}
+                  className='flex gap-3 px-3 py-2.5'
+                >
+                  {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                  <span>Switch theme</span>
+                </button>
+              </div>
+            </div>
+          </section>
         </SheetContent>
       </Sheet>
     </nav>
