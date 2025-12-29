@@ -19,7 +19,7 @@ const TransactionTable = () => {
   };
 
   return (
-    <Table className='bg-white'>
+    <Table className='containerLayout'>
       <TableHeader>
         <TableRow>
           <TableHead>Description</TableHead>

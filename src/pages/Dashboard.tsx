@@ -1,5 +1,4 @@
 import { ActionButton } from '@/components/ActionButton';
-import { CardLayout } from '@/components/CardLayout';
 import { ThemeButton } from '@/components/ThemeButton';
 import { TransactionDialog } from '@/components/TransactionDialog';
 import TransactionTable from '@/components/TransactionTable';
@@ -23,40 +22,41 @@ const Dashboard = () => {
   );
 
   return (
-    <main className='flex flex-col gap-5'>
+    <div className='flex flex-col gap-5'>
       <TransactionDialog trigger={<ActionButton text='Add transaction' />} />
       <section className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-        <CardLayout>
+        <div className='flex flex-col items-center containerLayout'>
+          <span className='text-sm text-muted-foreground'>Balance</span>
+          <span
+            className={`text-2xl font-bold ${
+              totalBalance < 0 && 'text-red-500'
+            }`}
+          >
+            ${getFormatNumber(totalBalance)}
+          </span>
+        </div>
+
+        <div className='flex justify-evenly h-full containerLayout'>
           <div className='flex flex-col items-center'>
-              <span className='text-sm text-muted-foreground'>Balance</span>
-            <span className={`text-2xl font-bold ${totalBalance < 0 && 'text-red-500'}`}>
-              ${getFormatNumber(totalBalance)}
+            <span className='text-sm text-muted-foreground'>Income</span>
+            <span className='text-xl font-bold'>
+              ${getFormatNumber(totalIncome)}
             </span>
           </div>
-        </CardLayout>
-        <CardLayout>
-          <div className='flex justify-evenly h-full'>
-            <div className='flex flex-col items-center'>
-              <span className='text-sm text-muted-foreground'>Income</span>
-              <span className='text-xl font-bold'>
-                ${getFormatNumber(totalIncome)}
-              </span>
-            </div>
-            <Separator orientation='vertical'  />
-            <div className='flex flex-col items-center'>
-              <span className='text-sm text-muted-foreground'>Expense</span>
-              <span className='text-xl font-bold'>
-                ${getFormatNumber(totalExpense)}
-              </span>
-            </div>
+          <Separator orientation='vertical' />
+          <div className='flex flex-col items-center'>
+            <span className='text-sm text-muted-foreground'>Expense</span>
+            <span className='text-xl font-bold'>
+              ${getFormatNumber(totalExpense)}
+            </span>
           </div>
-        </CardLayout>
+        </div>
       </section>
-      <div className='shadow-sm'>
+      <section className='shadow-sm'>
         <TransactionTable />
-      </div>
+      </section>
       <ThemeButton />
-    </main>
+    </div>
   );
 };
 

@@ -120,7 +120,7 @@
   body {
     @apply bg-neutral-50 text-black;
     @variant dark {
-      @apply bg-neutral-800 text-white;
+      @apply bg-neutral-900 text-white;
     }
   }
 }
@@ -131,6 +131,7 @@
     @apply appearance-none;
   }
 }
+
 button{
   @apply cursor-pointer;
 }
@@ -147,6 +148,12 @@ button{
   }
 }
 
+.containerLayout{
+  @apply bg-white py-3 px-6 rounded-md shadow-sm;
+  @variant dark{
+    @apply bg-neutral-800;
+  }
+}
 
 .radioItem {
   @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
@@ -154,3 +161,4 @@ button{
     @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
   }
 }
+
