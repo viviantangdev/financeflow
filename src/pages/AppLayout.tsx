@@ -1,6 +1,7 @@
 import { NavMenu } from '@/lib/navMenu';
 import { Outlet, useLocation } from 'react-router-dom';
-import { NavigationSidebar } from './NavigationSidebar';
+import { NavigationSidebar } from '../components/NavigationSidebar';
+import { NavigationAppbar } from '@/components/NavigationAppbar';
 
 export const AppLayout = () => {
   const location = useLocation();
@@ -10,9 +11,10 @@ export const AppLayout = () => {
   )?.title;
 
   return (
-    <div className='flex p-3 w-screen'>
+    <div className='md:flex w-screen'>
       <NavigationSidebar />
-      <div className='flex-1'>
+      <NavigationAppbar/>
+      <div className='flex-1 my-2 rounded-lg px-3 py-6 md:border'>
         <header className='pb-3'>
           <h2 className='text-xl'>{pageTitle}</h2>
         </header>

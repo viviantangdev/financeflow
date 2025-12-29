@@ -1,5 +1,4 @@
 import { ActionButton } from '@/components/ActionButton';
-import { ThemeButton } from '@/components/ThemeButton';
 import { TransactionDialog } from '@/components/TransactionDialog';
 import TransactionTable from '@/components/TransactionTable';
 import { Separator } from '@/components/ui/separator';
@@ -55,7 +54,6 @@ const Dashboard = () => {
       <section className='shadow-sm'>
         <TransactionTable />
       </section>
-      <ThemeButton />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router';
-import { AppLayout } from './components/AppLayout';
 import { NavMenu } from './lib/navMenu';
+import { AppLayout } from './pages/AppLayout';
 import { NotFound } from './pages/NotFound';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
               <Route key={item.title} path={item.href} element={item.element} />
             )
           )}
-          <Route path="*" element={<NotFound />} />
+          <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
     </>
