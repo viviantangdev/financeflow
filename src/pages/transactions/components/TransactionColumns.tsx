@@ -5,7 +5,7 @@ import type {
   TransactionType,
 } from '@/context/transactionContext';
 import { type ColumnDef } from '@tanstack/react-table';
-import { TableColumnHeader } from '../TableColumnHeader';
+import { TableColumnHeader } from './TableColumnHeader';
 
 export const columns: ColumnDef<TransactionItem>[] = [
   {
@@ -28,7 +28,10 @@ export const columns: ColumnDef<TransactionItem>[] = [
     },
   },
   {
+    id: 'category',
     accessorKey: 'category',
+    accessorFn: (row) => row.category.id, // ← Filter by category ID
+    filterFn: 'arrIncludesSome', // allows multi-select
     header: ({ column }) => (
       <TableColumnHeader column={column} title='Category' />
     ),
@@ -64,7 +67,7 @@ export const columns: ColumnDef<TransactionItem>[] = [
     accessorKey: 'amount',
     header: ({ column }) => (
       <div className='text-right'>
-        <TableColumnHeader column={column} title='Amount'/>
+        <TableColumnHeader column={column} title='Amount' />
       </div>
     ),
 

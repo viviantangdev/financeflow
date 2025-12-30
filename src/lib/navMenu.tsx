@@ -1,5 +1,5 @@
 import Dashboard from '@/pages/Dashboard';
-import { Transactions } from '@/pages/Transactions';
+import { Transactions } from '@/pages/transactions/Transactions';
 import { LayoutDashboard, Wallet, type LucideIcon } from 'lucide-react';
 import type React from 'react';
 

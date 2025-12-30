@@ -4,9 +4,12 @@ import { getFormatNumber } from '@/lib/helpers';
 
 const Dashboard = () => {
   const { balance, income, expense } = useTransaction();
-const balanceAmount =     balance > 0
+
+  const balanceAmount =balance === 0 ? `$${balance}` :
+    balance > 0
       ? `+$${getFormatNumber(balance)}`
       : `-$${getFormatNumber(Math.abs(balance))}`;
+
   return (
     <div className='flex flex-col gap-5'>
       <section className='grid grid-cols-1 md:grid-cols-2 gap-2'>
@@ -16,7 +19,6 @@ const balanceAmount =     balance > 0
             className={`text-2xl font-bold ${balance < 0 && 'text-red-500'}`}
           >
             {balanceAmount}
-            
           </span>
         </div>
 
