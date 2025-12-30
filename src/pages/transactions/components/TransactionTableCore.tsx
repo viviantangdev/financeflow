@@ -1,106 +1,101 @@
-// components/tables/TransactionTableCore.tsx
-import { ActionButton } from '@/components/ActionButton';
+/* eslint-disable react-hooks/incompatible-library */
+// components/tables/TransactionTable.tsx
 import { TransactionDialog } from '@/components/TransactionDialog';
+import { Button } from '@/components/ui/button';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import type { TransactionItem } from '@/context/transactionContext';
-import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
-import { columns as baseColumns } from './TransactionColumns';
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  useTransaction,
+  type TransactionItem,
+} from '@/context/transactionContext';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type SortingState,
+} from '@tanstack/react-table';
+import { Edit2, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { columns } from './TransactionColumns';
+import { TransactionFilters } from './TransactionFilters';
+import { TransactionTable } from './TransactionTable';
 
-type TransactionTableCoreProps = {
-  table: TanStackTable<TransactionItem>;
-  hasTransactions: boolean;
-};
+export function TransactionTableCore() {
+  const { transactions, deleteTransaction } = useTransaction();
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-export function TransactionTableCore({
-  table,
-  hasTransactions,
-}: TransactionTableCoreProps) {
+  const columnsWithActions: ColumnDef<TransactionItem>[] = [
+    ...columns,
+    {
+      id: 'actions',
+      header: () => <div className='text-right'>Actions</div>,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const item = row.original as TransactionItem;
 
-  // Calculate balance from currently visible (filtered) rows
-  const visibleBalance = table
-    .getFilteredRowModel()
-    .rows.reduce((sum, row) => sum + row.original.amount, 0);
+        return (
+          <div className='flex items-center justify-end gap-1'>
+            <Tooltip>
+              <TransactionDialog
+                transaction={item}
+                trigger={
+                  <TooltipTrigger asChild>
+                    <Button variant='ghost' size='icon' className='h-8 w-8'>
+                      <Edit2 className='h-4 w-4' />
+                      <span className='sr-only'>Edit</span>
+                    </Button>
+                  </TooltipTrigger>
+                }
+              />
+              <TooltipContent side='top'>
+                <p>Edit</p>
+              </TooltipContent>
+            </Tooltip>
 
-  const footerAmount =
-    visibleBalance === 0
-      ? `$${visibleBalance}`
-      : visibleBalance > 0
-      ? `+$${visibleBalance}`
-      : `-$${Math.abs(visibleBalance)}`;
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  className='h-8 w-8'
+                  onClick={() => deleteTransaction(item.id)}
+                >
+                  <Trash2 className='h-4 w-4' />
+                  <span className='sr-only'>Delete</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side='top'>
+                <p>Delete</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
+  ];
 
-  const footerColor =
-    visibleBalance > 0
-      ? 'text-emerald-600'
-      : visibleBalance < 0
-      ? 'text-red-600'
-      : 'text-foreground';
+  const table = useReactTable({
+    data: transactions,
+    columns: columnsWithActions,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    state: { sorting },
+  });
 
   return (
-    <Table className='rounded-lg overflow-hidden'>
-      <TableHeader className='bg-secondary'>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-
-      <TableBody>
-        {hasTransactions ? (
-          table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell
-              colSpan={baseColumns.length + 1}
-              className='text-center py-12'
-            >
-              <div className='flex flex-col items-center gap-4'>
-                <p className='text-lg text-muted-foreground'>
-                  No transactions yet.
-                </p>
-                <TransactionDialog
-                  trigger={<ActionButton text='Create transaction' />}
-                />
-              </div>
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-
-      <TableFooter className='bg-secondary'>
-        <TableRow>
-          <TableCell colSpan={4} className='font-semibold'>
-            Balance
-          </TableCell>
-          <TableCell className={`text-right font-bold ${footerColor}`}>
-            {footerAmount}
-          </TableCell>
-          <TableCell />
-        </TableRow>
-      </TableFooter>
-    </Table>
+    <>
+      <TransactionFilters table={table} />
+      <TransactionTable
+        table={table}
+        hasTransactions={transactions.length > 0}
+      />
+    </>
   );
 }

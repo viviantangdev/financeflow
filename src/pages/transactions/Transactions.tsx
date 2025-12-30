@@ -1,6 +1,6 @@
 import { ActionButton } from '@/components/ActionButton';
 import { TransactionDialog } from '@/components/TransactionDialog';
-import { TransactionTable } from './components/TransactionTable';
+import { TransactionTableCore } from './components/TransactionTableCore';
 
 export const Transactions = () => {
   return (
@@ -10,8 +10,9 @@ export const Transactions = () => {
           trigger={<ActionButton text='Create transaction' />}
         />
       </section>
+      {/* Table with filters */}
       <section className='space-y-3 '>
-        <TransactionTable />
+        <TransactionTableCore />
       </section>
     </div>
   );
