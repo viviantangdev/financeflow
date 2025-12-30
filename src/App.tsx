@@ -15,8 +15,8 @@ function App() {
               <Route key={item.title} path={item.href} element={item.element} />
             )
           )}
-          <Route path='*' element={<NotFound />} />
         </Route>
+          <Route path='*' element={<NotFound />} />
       </Routes>
     </>
   );

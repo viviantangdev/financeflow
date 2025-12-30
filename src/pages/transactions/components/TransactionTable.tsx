@@ -90,12 +90,12 @@ export function TransactionTable() {
   });
 
   return (
-    <div>
+    <>
       <TransactionFilters table={table} />
       <TransactionTableCore
         table={table}
         hasTransactions={transactions.length > 0}
       />
-    </div>
+    </>
   );
 }

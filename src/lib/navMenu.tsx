@@ -1,6 +1,12 @@
-import Dashboard from '@/pages/Dashboard';
+import CashFlow from '@/pages/cashFlow/CashFlow';
+import Dashboard from '@/pages/dashboard/Dashboard';
 import { Transactions } from '@/pages/transactions/Transactions';
-import { LayoutDashboard, Wallet, type LucideIcon } from 'lucide-react';
+import {
+  LayoutDashboard,
+  TrendingUpDown,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react';
 import type React from 'react';
 
 type NavItem = {
@@ -19,9 +25,15 @@ export const NavMenu: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
+    title: 'Cash Flow',
+    href: '/cashflow',
+    element: <CashFlow />,
+    icon: TrendingUpDown,
+  },
+  {
     title: 'Transactions',
     href: '/transactions',
     element: <Transactions />,
-    icon: Wallet ,
+    icon: Wallet,
   },
 ];

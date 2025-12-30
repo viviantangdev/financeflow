@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import type { CategoryItem } from './categoryContext';
 
 export const TRANSACTION_TYPES = ['Income', 'Expense'];
@@ -21,20 +21,28 @@ export interface TransactionItem extends TransactionBase {
 // Default initial values
 const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
-    id: 'seed-1', // simple fixed IDs for seed data
+    id: 'seed-1',
     description: 'Salary',
-    amount: 250,
+    amount: 5000,
     type: 'Income',
     category: { id: '1', name: 'Salary' },
-    date: '12-01-2025',
+    date: '12-15-2025', // Mid-December
   },
   {
-    id: 'seed-2', 
+    id: 'seed-2',
     description: 'Grocery',
     amount: -250,
     type: 'Expense',
     category: { id: '2', name: 'Grocery' },
-    date: '10-01-2025',
+    date: '12-30-2025', // Today!
+  },
+  {
+    id: 'seed-3',
+    description: 'Bonus',
+    amount: 1000,
+    type: 'Income',
+    category: { id: '1', name: 'Salary' },
+    date: '12-01-2025',
   },
 ];
 
@@ -62,19 +70,32 @@ export function TransactionProvider({
     DEFAULT_TRANSACTIONS
   );
 
+  // Parse 'MM-DD-YYYY' date string into real Date object
+  const parseDate = (dateStr: string): Date => {
+    const [month, day, year] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  // Sort transactions: newest first
+  const sortedTransactions = useMemo(() => {
+    return [...transactions].sort((a, b) => {
+      return parseDate(b.date).getTime() - parseDate(a.date).getTime();
+    });
+  }, [transactions]);
+
   // Calculate balance from transactions
-  const balance = transactions.reduce((acc, t) => {
+  const balance = sortedTransactions.reduce((acc, t) => {
     return acc + t.amount;
   }, 0);
 
   // Calculate income from transactions
-  const income = transactions
+  const income = sortedTransactions
     .filter((income) => income.type === 'Income')
     .reduce((sum, income) => sum + income.amount, 0);
 
   // Calculate expense from transactions
   const expense = Math.abs(
-    transactions
+    sortedTransactions
       .filter((expense) => expense.type === 'Expense')
       .reduce((sum, expense) => sum + expense.amount, 0)
   );
@@ -101,9 +122,10 @@ export function TransactionProvider({
   return (
     <TransactionContext.Provider
       value={{
-        transactions,
+        transactions: sortedTransactions,
         balance,
-        income, expense,
+        income,
+        expense,
         addTransaction,
         updateTransaction,
         deleteTransaction,

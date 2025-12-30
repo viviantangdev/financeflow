@@ -3,8 +3,6 @@ import { TransactionDialog } from '@/components/TransactionDialog';
 import { TransactionTable } from './components/TransactionTable';
 
 export const Transactions = () => {
-
-  
   return (
     <div className='flex flex-col gap-5'>
       <section>
