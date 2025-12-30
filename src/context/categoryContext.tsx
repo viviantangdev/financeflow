@@ -11,7 +11,10 @@ export interface CategoryItem extends CategoryBase {
   id: string;
 }
 
-const DEFAULT_CATEGORIES: CategoryItem[] = [{ id: '1', name: 'Salary' }];
+const DEFAULT_CATEGORIES: CategoryItem[] = [
+  { id: '1', name: 'Salary' },
+  { id: '2', name: 'Grocery' },
+];
 
 interface CategoryContextType {
   categories: CategoryItem[];

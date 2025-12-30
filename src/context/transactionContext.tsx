@@ -22,11 +22,19 @@ export interface TransactionItem extends TransactionBase {
 const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: 'seed-1', // simple fixed IDs for seed data
-    description: 'Grocery',
+    description: 'Salary',
     amount: 250,
     type: 'Income',
     category: { id: '1', name: 'Salary' },
-    date: '2025-12-01',
+    date: '12-01-2025',
+  },
+  {
+    id: 'seed-2', 
+    description: 'Grocery',
+    amount: -250,
+    type: 'Expense',
+    category: { id: '2', name: 'Grocery' },
+    date: '10-01-2025',
   },
 ];
 
@@ -63,7 +71,7 @@ export function TransactionProvider({
   const income = transactions
     .filter((income) => income.type === 'Income')
     .reduce((sum, income) => sum + income.amount, 0);
-    
+
   // Calculate expense from transactions
   const expense = Math.abs(
     transactions

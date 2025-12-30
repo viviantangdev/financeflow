@@ -132,7 +132,7 @@
   }
 }
 
-button{
+button {
   @apply cursor-pointer;
 }
 .primaryButton {
@@ -148,9 +148,9 @@ button{
   }
 }
 
-.containerLayout{
+.containerLayout {
   @apply bg-white py-3 px-6 rounded-md shadow-sm;
-  @variant dark{
+  @variant dark {
     @apply bg-neutral-800;
   }
 }
@@ -161,4 +161,3 @@ button{
     @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
   }
 }
-
