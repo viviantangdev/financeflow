@@ -1,6 +1,6 @@
-import CashFlow from '@/pages/cashFlow/CashFlow';
-import Dashboard from '@/pages/dashboard/Dashboard';
-import { Transactions } from '@/pages/transactions/Transactions';
+import CashFlowPage from '@/pages/cashFlow/CashFlowPage';
+import { DashboardPage } from '@/pages/dashboard/DashboardPage';
+import { TransactionsPage } from '@/pages/transactions/TransactionsPage';
 import {
   LayoutDashboard,
   TrendingUpDown,
@@ -21,19 +21,19 @@ export const NavMenu: NavItem[] = [
     title: 'Dashboard',
     href: '/',
     isIndex: true,
-    element: <Dashboard />,
+    element: <DashboardPage />,
     icon: LayoutDashboard,
   },
   {
     title: 'Cash Flow',
     href: '/cashflow',
-    element: <CashFlow />,
+    element: <CashFlowPage />,
     icon: TrendingUpDown,
   },
   {
     title: 'Transactions',
     href: '/transactions',
-    element: <Transactions />,
+    element: <TransactionsPage />,
     icon: Wallet,
   },
 ];

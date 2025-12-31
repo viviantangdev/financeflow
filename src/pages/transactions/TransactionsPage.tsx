@@ -2,7 +2,7 @@ import { ActionButton } from '@/components/ActionButton';
 import { TransactionDialog } from '@/components/TransactionDialog';
 import { TransactionTableCore } from './components/TransactionTableCore';
 
-export const Transactions = () => {
+export const TransactionsPage = () => {
   return (
     <div className='flex flex-col gap-5'>
       <section>

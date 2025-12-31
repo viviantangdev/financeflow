@@ -4,7 +4,6 @@ import {
   type TransactionItem,
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
-import { getSignedAmount } from '@/lib/helpers';
 import React from 'react';
 import TransactionForm from './TransactionForm';
 import {
@@ -32,7 +31,7 @@ export const TransactionDialog = ({
   const isEditMode = !!transaction;
 
   const handleSubmit = (data: TransactionBase) => {
-    const signedAmount = getSignedAmount(data.amount, data.type);
+    const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
 
     if (isEditMode) {
       updateTransaction(transaction.id, {

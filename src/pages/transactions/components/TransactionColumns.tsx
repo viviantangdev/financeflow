@@ -67,22 +67,21 @@ export const columns: ColumnDef<TransactionItem>[] = [
     accessorKey: 'amount',
     header: ({ column }) => (
       <div className='text-right'>
-        <TableColumnHeader column={column} title='Amount' />
+        <TableColumnHeader column={column} title='Amount ($)' />
       </div>
     ),
 
-    sortingFn: (rowA, rowB) => {
-      const absA = Math.abs(rowA.original.amount);
-      const absB = Math.abs(rowB.original.amount);
-      return absB - absA || rowA.index - rowB.index; // fallback to original order
-    },
+sortingFn: (rowA, rowB, columnId) => {
+  const a = Math.abs(rowA.getValue(columnId));
+  const b = Math.abs(rowB.getValue(columnId));
+  return a - b || rowA.index - rowB.index;
+},
     cell: ({ row }) => {
-      const amount = Math.abs(row.getValue<number>('amount'));
-      const type = row.original.type;
+      const amount = row.getValue<number>('amount');
 
       return (
-        <div className={`text-right font-medium`}>
-          {type === 'Income' ? '+' : '-'}${amount}
+        <div className={`text-right font-medium ${amount > 0 ? `text-emerald-500`: `text-red-500`}`}>
+          {amount> 0 ? `+${amount}`: amount}
         </div>
       );
     },

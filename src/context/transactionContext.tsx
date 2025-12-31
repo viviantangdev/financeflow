@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { format } from 'date-fns';
 import { createContext, useContext, useMemo } from 'react';
 import type { CategoryItem } from './categoryContext';
 
@@ -11,7 +12,7 @@ export interface TransactionBase {
   amount: number;
   category: CategoryItem;
   type: TransactionType;
-  date: string;
+  date: string; // ISO format: 'YYYY-MM-DD'
 }
 
 export interface TransactionItem extends TransactionBase {
@@ -26,7 +27,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: 5000,
     type: 'Income',
     category: { id: '1', name: 'Salary' },
-    date: '12-15-2025', // Mid-December
+    date: '2025-12-15',
   },
   {
     id: 'seed-2',
@@ -34,7 +35,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -250,
     type: 'Expense',
     category: { id: '2', name: 'Grocery' },
-    date: '12-30-2025', // Today!
+    date: '2025-12-30',
   },
   {
     id: 'seed-3',
@@ -42,7 +43,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: 1000,
     type: 'Income',
     category: { id: '1', name: 'Salary' },
-    date: '12-01-2025',
+    date: '2025-12-01',
   },
 ];
 
@@ -70,17 +71,9 @@ export function TransactionProvider({
     DEFAULT_TRANSACTIONS
   );
 
-  // Parse 'MM-DD-YYYY' date string into real Date object
-  const parseDate = (dateStr: string): Date => {
-    const [month, day, year] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  };
-
-  // Sort transactions: newest first
+  // Sort newest → oldest using ISO strings (lexicographically correct!)
   const sortedTransactions = useMemo(() => {
-    return [...transactions].sort((a, b) => {
-      return parseDate(b.date).getTime() - parseDate(a.date).getTime();
-    });
+    return [...transactions].sort((a, b) => b.date.localeCompare(a.date));
   }, [transactions]);
 
   // Calculate balance from transactions
@@ -94,16 +87,20 @@ export function TransactionProvider({
     .reduce((sum, income) => sum + income.amount, 0);
 
   // Calculate expense from transactions
-  const expense = Math.abs(
-    sortedTransactions
-      .filter((expense) => expense.type === 'Expense')
-      .reduce((sum, expense) => sum + expense.amount, 0)
-  );
+  const expense = sortedTransactions
+    .filter((expense) => expense.type === 'Expense')
+    .reduce((sum, expense) => sum + expense.amount, 0);
 
   const addTransaction = (newTransaction: Omit<TransactionItem, 'id'>) => {
+    const dateStr =
+      typeof newTransaction.date === 'string'
+        ? newTransaction.date
+        : format(newTransaction.date, 'yyyy-MM-dd');
+
     const transaction: TransactionItem = {
-      id: crypto.randomUUID(), // generates unique ID
+      id: crypto.randomUUID(),
       ...newTransaction,
+      date: dateStr,
     };
 
     setTransactions((prev) => [...prev, transaction]);
@@ -111,7 +108,21 @@ export function TransactionProvider({
 
   const updateTransaction = (id: string, updates: Partial<TransactionItem>) => {
     setTransactions((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              ...updates,
+              // Normalize date if updated
+              ...(updates.date && {
+                date:
+                  typeof updates.date === 'string'
+                    ? updates.date
+                    : format(updates.date, 'yyyy-MM-dd'),
+              }),
+            }
+          : t
+      )
     );
   };
 

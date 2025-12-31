@@ -13,6 +13,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { formatCompactNumber, formatCurrency } from '@/lib/helpers';
 import { format } from 'date-fns';
 import { TrendingDown, TrendingUp, TrendingUpDown } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
@@ -34,6 +35,11 @@ export function CashFlowChart({
   viewMode,
   selectedDate,
 }: CashFlowChartProps) {
+
+  const balanceAmount = formatCurrency(balance)
+  const incomeAmount = formatCompactNumber(income)
+  const expenseAmount = formatCompactNumber(expense)
+
   const chartConfig = {
     income: { label: 'Income', color: 'var(--chart-1)' },
     expense: { label: 'Expense', color: 'var(--chart-2)' },
@@ -53,11 +59,11 @@ export function CashFlowChart({
         <CardDescription>
           Showing total for selected period - {periodLabel}
         </CardDescription>
-        <div className='py-3 grid grid-cols-3'>
+        <div className='py-3 flex justify-between'>
           {/* Balance */}
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-2'>
-              <TrendingUpDown className='h-4 w-4 text-emerald-500' />
+              <TrendingUpDown className='h-4 w-4' />
               <span className='text-sm font-medium text-muted-foreground'>
                 Balance
               </span>
@@ -68,13 +74,10 @@ export function CashFlowChart({
                 ${balance < 0 && 'text-red-600'}
                ${balance === 0 && 'text-foreground'}`}
             >
-              {balance === 0
-                ? '$0'
-                : balance > 0
-                ? `+$${balance}`
-                : `-$${Math.abs(balance)}`}
+              {balanceAmount}
             </span>
           </div>
+
           {/* Income */}
           <div className='flex flex-col gap-2'>
             <div className='flex items-center gap-2'>
@@ -83,7 +86,7 @@ export function CashFlowChart({
                 Income
               </span>
             </div>
-            <span className='text-3xl font-bold'>${income}</span>
+            <span className='text-3xl font-bold'>${incomeAmount}</span>
           </div>
 
           {/* Expense */}
@@ -94,7 +97,7 @@ export function CashFlowChart({
                 Expense
               </span>
             </div>
-            <span className='text-3xl font-bold'>${expense}</span>
+            <span className='text-3xl font-bold'>${expenseAmount}</span>
           </div>
         </div>
       </CardHeader>

@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { TransactionItem } from '@/context/transactionContext';
+import { formatCurrency } from '@/lib/helpers';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import { columns as baseColumns } from './TransactionColumns';
 
@@ -23,18 +24,12 @@ export function TransactionTable({
   table,
   hasTransactions,
 }: TransactionTableProps) {
-
   // Calculate balance from currently visible (filtered) rows
   const visibleBalance = table
     .getFilteredRowModel()
     .rows.reduce((sum, row) => sum + row.original.amount, 0);
 
-  const footerAmount =
-    visibleBalance === 0
-      ? `$${visibleBalance}`
-      : visibleBalance > 0
-      ? `+$${visibleBalance}`
-      : `-$${Math.abs(visibleBalance)}`;
+  const footerAmount = formatCurrency(visibleBalance, { compact: false });
 
   const footerColor =
     visibleBalance > 0

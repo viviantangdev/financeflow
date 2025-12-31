@@ -1,6 +1,6 @@
 import { CashFlowChartCore } from './components/CashFlowChartCore';
 
-export default function CashFlow() {
+export default function CashFlowPage() {
   return (
     <>
       {/* Cashflow Chart with filters */}

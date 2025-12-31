@@ -1,5 +1,5 @@
 import { useTransaction } from '@/context/transactionContext';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { CashFlowChart } from './CashFlowChart';
 import { CashFlowFilters } from './CashFlowFilters';
@@ -11,24 +11,54 @@ export const CashFlowChartCore = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('month');
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date(today.getFullYear(), today.getMonth(), 1) // Start of current month
   );
 
-  const parseDate = (dateStr: string): Date => {
-    const [month, day, year] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  };
-
+  // Unique years from ISO dates
   const years = useMemo(() => {
-    const unique = new Set(
-      transactions.map((t) => parseDate(t.date).getFullYear())
+    const uniqueYears = new Set<number>(
+      transactions.map((t) => parseISO(t.date).getFullYear())
     );
-    return Array.from(unique).sort((a, b) => b - a);
+    return Array.from(uniqueYears).sort((a, b) => b - a);
   }, [transactions]);
 
+  // Filtered totals: Balance, Income, Expense
+  const { filteredBalance, filteredIncome, filteredExpense } = useMemo(() => {
+    const filtered = transactions.filter((t) => {
+      const date = parseISO(t.date);
+      if (viewMode === 'year')
+        return date.getFullYear() === selectedDate.getFullYear();
+      if (viewMode === 'month')
+        return (
+          date.getFullYear() === selectedDate.getFullYear() &&
+          date.getMonth() === selectedDate.getMonth()
+        );
+      return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+    });
+
+    const balance = filtered.reduce((sum, t) => sum + t.amount, 0);
+
+    const income = filtered
+      .filter((t) => t.type === 'Income')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const expense = Math.abs(
+      filtered
+        .filter((t) => t.type === 'Expense')
+        .reduce((sum, t) => sum + t.amount, 0)
+    );
+
+    return {
+      filteredBalance: balance,
+      filteredIncome: income,
+      filteredExpense: expense,
+    };
+  }, [transactions, viewMode, selectedDate]);
+
+  // Chart data
   const chartData = useMemo(() => {
     const filtered = transactions.filter((t) => {
-      const date = parseDate(t.date);
+      const date = parseISO(t.date);
       if (viewMode === 'year')
         return date.getFullYear() === selectedDate.getFullYear();
       if (viewMode === 'month')
@@ -44,9 +74,11 @@ export const CashFlowChartCore = () => {
     const grouped = new Map<string, { income: number; expense: number }>();
 
     filtered.forEach((t) => {
-      const date = parseDate(t.date);
+      const date = parseISO(t.date);
       const key =
-        viewMode === 'year' ? format(date, 'MMM') : format(date, 'MMM dd');
+        viewMode === 'year'
+          ? format(date, 'MMM')
+          : format(date, 'MMM dd, yyyy');
 
       const current = grouped.get(key) || { income: 0, expense: 0 };
       if (t.type === 'Income') current.income += t.amount;
@@ -56,7 +88,7 @@ export const CashFlowChartCore = () => {
 
     const entries = Array.from(grouped.entries());
 
-    // Chronological sort using real dates 
+    // Sort chronologically using real dates
     entries.sort(([keyA], [keyB]) => {
       let dateA: Date;
       let dateB: Date;
@@ -80,58 +112,6 @@ export const CashFlowChartCore = () => {
       expense: data.expense,
     }));
   }, [transactions, viewMode, selectedDate]);
-
-  const filteredBalance = useMemo(() => {
-    const filtered = transactions.filter((t) => {
-      const date = parseDate(t.date);
-      if (viewMode === 'year')
-        return date.getFullYear() === selectedDate.getFullYear();
-      if (viewMode === 'month')
-        return (
-          date.getFullYear() === selectedDate.getFullYear() &&
-          date.getMonth() === selectedDate.getMonth()
-        );
-      return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-    });
-
-    return filtered.reduce((sum, t) => sum + t.amount, 0);
-  }, [transactions, viewMode, selectedDate]);
-
-  const filteredIncome = useMemo(() => {
-    const filtered = transactions.filter((t) => {
-      const date = parseDate(t.date);
-      if (viewMode === 'year')
-        return date.getFullYear() === selectedDate.getFullYear();
-      if (viewMode === 'month')
-        return (
-          date.getFullYear() === selectedDate.getFullYear() &&
-          date.getMonth() === selectedDate.getMonth()
-        );
-      return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-    });
-  return filtered
-    .filter(t => t.type === 'Income')
-    .reduce((sum, t) => sum + t.amount, 0);
-}, [transactions, viewMode, selectedDate]);
-
-const filteredExpense = useMemo(() => {
-      const filtered = transactions.filter((t) => {
-      const date = parseDate(t.date);
-      if (viewMode === 'year')
-        return date.getFullYear() === selectedDate.getFullYear();
-      if (viewMode === 'month')
-        return (
-          date.getFullYear() === selectedDate.getFullYear() &&
-          date.getMonth() === selectedDate.getMonth()
-        );
-      return format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-    });
-  return Math.abs(
-    filtered
-      .filter(t => t.type === 'Expense')
-      .reduce((sum, t) => sum + t.amount, 0)
-  );
-}, [transactions, viewMode, selectedDate]);
 
   return (
     <div className='space-y-3'>

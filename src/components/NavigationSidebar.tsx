@@ -45,8 +45,8 @@ export const NavigationSidebar = () => {
               {NavMenu.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
-                  <SidebarMenuItem key={item.title} >
-                    <SidebarMenuButton asChild tooltip={item.title} >
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild tooltip={item.title}>
                       <NavLink
                         to={item.href}
                         end
@@ -66,7 +66,6 @@ export const NavigationSidebar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
 
         {/* Quick Actions Group */}
         <SidebarGroup>

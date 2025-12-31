@@ -5,8 +5,8 @@ import {
   type TransactionItem,
   type TransactionType,
 } from '@/context/transactionContext';
-import { getFormatDate } from '@/lib/helpers';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
+import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -113,7 +113,7 @@ const TransactionForm = ({
       amount: Number(data.amount),
       category: data.category,
       type: data.type,
-      date: getFormatDate(data.date),
+      date: format(data.date, 'yyyy-MM-dd'),
     });
   };
 
@@ -345,7 +345,7 @@ const TransactionForm = ({
                     }`}
                   >
                     <span>
-                      {field.value ? getFormatDate(field.value) : 'Pick a date'}
+                      {field.value ? format(field.value, 'yyyy-MM-dd') : 'Pick a date'}
                     </span>
                     <ChevronDownIcon />
                   </Button>

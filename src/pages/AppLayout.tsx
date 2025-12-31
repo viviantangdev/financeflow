@@ -16,7 +16,7 @@ export const AppLayout = () => {
   const PageIcon = currentItem!.icon; // Capitalized for clarity
 
   return (
-    <div className='md:flex w-screen'>
+    <div className=' w-screen md:flex '>
       <NavigationSidebar />
       <NavigationAppbar />
       <div className='flex-1 my-2 rounded-lg px-3 py-6  flex flex-col gap-8'>
