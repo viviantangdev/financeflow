@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import type React from 'react';
 import { createContext, useContext } from 'react';
@@ -12,8 +11,12 @@ export interface CategoryItem extends CategoryBase {
 }
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
-  { id: '1', name: 'Salary' },
-  { id: '2', name: 'Grocery' },
+  { id: '1', name: 'Housing' },
+  { id: '2', name: 'Food' },
+  { id: '3', name: 'Transportation' },
+  { id: '4', name: 'Lifestyle' },
+  { id: '5', name: 'Entertainment' },
+  { id: '6', name: 'Wages' },
 ];
 
 interface CategoryContextType {
@@ -23,6 +26,7 @@ interface CategoryContextType {
   deleteCategory: (id: string) => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const CategoryContext = createContext<CategoryContextType | undefined>(
   undefined
 );
@@ -61,6 +65,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCategory(): CategoryContextType {
   const context = useContext(CategoryContext);
   if (!context) {

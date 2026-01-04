@@ -11,7 +11,6 @@ import { formatCurrency } from '@/lib/helpers';
 import { format } from 'date-fns';
 import { MoveRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 export const DashboardRecentTransactions = () => {
   const { transactions } = useTransaction();
   const recentItems = transactions.slice(0, 5);
@@ -23,26 +22,28 @@ export const DashboardRecentTransactions = () => {
             <CardTitle>Recent Transactions</CardTitle>
           </CardHeader>
           <CardContent className='space-y-3'>
-            {recentItems.map((item) => (
-              <div className='space-y-3'>
-                <div className='flex flex-row items-end'>
-                  <div className='flex flex-1 flex-col gap-0.5'>
-                    <span>{item.description}</span>
-                    <span className='text-sm text-muted-foreground'>
-                      {format(item.date, 'MMMM dd, yyyy')}
+            {recentItems.map((item) => {
+              return (
+                <div key={item.id} className='space-y-3'>
+                  <div className='flex flex-row items-end'>
+                    <div className='flex flex-1 flex-col gap-0.5'>
+                      <span>{item.description}</span>
+                      <span className='text-sm text-muted-foreground'>
+                        {format(item.date, 'MMMM dd, yyyy')}
+                      </span>
+                    </div>
+                    <span
+                      className={`${
+                        item.amount > 0 ? 'text-emerald-500' : 'text-red-500'
+                      }`}
+                    >
+                      {formatCurrency(item.amount, { compact: false })}
                     </span>
                   </div>
-                  <span
-                    className={`${
-                      item.amount > 0 ? 'text-emerald-500' : 'text-red-500'
-                    }`}
-                  >
-                    {formatCurrency(item.amount, { compact: false })}
-                  </span>
+                  <Separator />
                 </div>
-                <Separator />
-              </div>
-            ))}
+              );
+            })}
           </CardContent>
           <CardFooter className='flex gap-2'>
             <span className='text-sm font-medium '>View more transactions</span>

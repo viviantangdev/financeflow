@@ -8,10 +8,10 @@ type ViewMode = 'year' | 'month' | 'day';
 
 export const CashFlowChartCore = () => {
   const { transactions } = useTransaction();
-  const [viewMode, setViewMode] = useState<ViewMode>('month');
+  const [viewMode, setViewMode] = useState<ViewMode>('year');
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(
-    new Date(today.getFullYear(), today.getMonth(), 1) // Start of current month
+    new Date(today.getFullYear(), today.getMonth(), 1) // Start of current year
   );
 
   // Unique years from ISO dates

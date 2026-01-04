@@ -8,6 +8,8 @@ import App from './App.tsx';
 import { CategoryProvider } from './context/categoryContext.tsx';
 import { ThemeProvider } from './context/themeContext.tsx';
 import { TransactionProvider } from './context/transactionContext.tsx';
+import { Toaster } from "@/components/ui/sonner"
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
@@ -19,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
             </TransactionProvider>
           </CategoryProvider>
         </ThemeProvider>
+        <Toaster/>
       </SidebarProvider>
     </BrowserRouter>
   </StrictMode>

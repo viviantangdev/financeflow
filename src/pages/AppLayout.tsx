@@ -21,7 +21,7 @@ export const AppLayout = () => {
       <NavigationAppbar />
       <div className='flex-1 my-2 rounded-lg px-3 py-6  flex flex-col gap-8'>
         <header className='flex items-center gap-2'>
-          <PageIcon />
+          <PageIcon className='text-emerald-500'/>
           <h2 className='text-2xl'>{pageTitle}</h2>
         </header>
         <main className='flex-1'>

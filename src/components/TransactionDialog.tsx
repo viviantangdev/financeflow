@@ -5,6 +5,7 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import React from 'react';
+import { toast } from 'sonner';
 import TransactionForm from './TransactionForm';
 import {
   Dialog,
@@ -41,6 +42,7 @@ export const TransactionDialog = ({
         type: data.type,
         date: data.date,
       });
+      toast.success('Transaction has been updated');
     } else {
       addTransaction({
         description: data.description,
@@ -49,6 +51,7 @@ export const TransactionDialog = ({
         type: data.type,
         date: data.date,
       });
+      toast.success('Transaction has been created');
     }
 
     setIsDialogOpen(false);

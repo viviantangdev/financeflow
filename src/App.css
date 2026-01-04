@@ -147,6 +147,18 @@ button {
     }
   }
 }
+.errorButton {
+  @apply bg-red-500;
+  &:hover {
+    @apply bg-red-600;
+  }
+  @variant dark {
+    @apply bg-red-500;
+    &:hover {
+      @apply bg-red-600;
+    }
+  }
+}
 
 
 .radioItem {
