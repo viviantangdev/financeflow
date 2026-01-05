@@ -13,13 +13,31 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { useTheme } from '@/context/themeContext';
+import {
+  useTransaction,
+  type TransactionBase,
+} from '@/context/transactionContext';
 import { NavMenu } from '@/lib/navMenu';
 import { MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { toast } from 'sonner';
 import { TransactionDialog } from './TransactionDialog';
 
 export const NavigationSidebar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { addTransaction } = useTransaction();
+
+  const handleAddTransaction = (data: TransactionBase) => {
+    const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
+    addTransaction({
+      description: data.description,
+      amount: signedAmount,
+      category: data.category,
+      type: data.type,
+      date: data.date,
+    });
+    toast.success('Transaction has been created');
+  };
 
   return (
     <Sidebar collapsible='icon' variant='floating'>
@@ -76,6 +94,7 @@ export const NavigationSidebar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <TransactionDialog
+                  onSubmit={handleAddTransaction}
                   trigger={
                     <SidebarMenuButton asChild tooltip='Create transaction'>
                       <button className='flex w-full items-center gap-3'>

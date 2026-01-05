@@ -1,8 +1,13 @@
 import { useTheme } from '@/context/themeContext';
+import {
+  useTransaction,
+  type TransactionBase,
+} from '@/context/transactionContext';
 import { NavMenu } from '@/lib/navMenu';
 import { Menu, MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 import { TransactionDialog } from './TransactionDialog';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
@@ -18,9 +23,22 @@ export const NavigationAppbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { addTransaction } = useTransaction();
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAddTransaction = (data: TransactionBase) => {
+    const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
+    addTransaction({
+      description: data.description,
+      amount: signedAmount,
+      category: data.category,
+      type: data.type,
+      date: data.date,
+    });
+    toast.success('Transaction has been created');
   };
 
   return (
@@ -77,6 +95,7 @@ export const NavigationAppbar = () => {
               </Label>
               <div className='mt-4 space-y-2'>
                 <TransactionDialog
+                  onSubmit={handleAddTransaction}
                   trigger={
                     <button className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'>
                       <Plus className='h-5 w-5' />

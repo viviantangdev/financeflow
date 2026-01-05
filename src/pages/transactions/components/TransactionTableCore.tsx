@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/tooltip';
 import {
   useTransaction,
+  type TransactionBase,
   type TransactionItem,
 } from '@/context/transactionContext';
 import { formatCurrency } from '@/lib/helpers';
@@ -39,12 +40,26 @@ import { TransactionFilters } from './TransactionFilters';
 import { TransactionTable } from './TransactionTable';
 
 export function TransactionTableCore() {
-  const { transactions, deleteTransaction } = useTransaction();
+  const { transactions, updateTransaction, deleteTransaction } =
+    useTransaction();
   const [sorting, setSorting] = useState<SortingState>([]);
-
+  const [selectedItem, setSelectedItem] = useState<TransactionItem>();
+ 
   const handleDelete = (item: TransactionItem) => {
     toast.success('Transaction has been deleted');
     deleteTransaction(item.id);
+  };
+
+  const handleEdit = (data: TransactionBase) => {
+    const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
+    updateTransaction(selectedItem!.id, {
+      description: data.description,
+      amount: signedAmount,
+      category: data.category,
+      type: data.type,
+      date: data.date,
+    });
+    toast.success('Transaction has been updated');
   };
 
   const columnsWithActions: ColumnDef<TransactionItem>[] = [
@@ -55,11 +70,12 @@ export function TransactionTableCore() {
       enableSorting: false,
       cell: ({ row }) => {
         const item = row.original as TransactionItem;
-
+        setSelectedItem(item);
         return (
           <div className='flex items-center justify-end gap-1'>
             <Tooltip>
               <TransactionDialog
+                onSubmit={handleEdit}
                 transaction={item}
                 trigger={
                   <TooltipTrigger asChild>
