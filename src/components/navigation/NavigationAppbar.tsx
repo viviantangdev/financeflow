@@ -1,3 +1,6 @@
+import { FormDialog } from '@/components/dialog/FormDialog';
+import { TransactionForm } from '@/components/form/TransactionForm';
+import { useCategory, type CategoryBase } from '@/context/categoryContext';
 import { useTheme } from '@/context/themeContext';
 import {
   useTransaction,
@@ -5,32 +8,44 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
-import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
-import { TransactionForm } from '@/pages/transactions/components/TransactionForm';
-import { Menu, MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
+import { Menu, MoonIcon, Plus, Star, SunIcon, Tag } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Label } from './ui/label';
-import { Separator } from './ui/separator';
+import { CategoryForm } from '../form/CategoryForm';
+import { Label } from '../ui/label';
+import { Separator } from '../ui/separator';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from './ui/sheet';
+} from '../ui/sheet';
+
+type DialogMode = 'addTransaction' | 'newCategory';
 
 export const NavigationAppbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
+  const [dialogMode, setDialogMode] = useState<DialogMode>('addTransaction');
 
   const { addTransaction } = useTransaction();
+  const { addCategory } = useCategory();
 
   const handleCloseAppbar = () => {
     setOpen(false);
+  };
+
+  const openAddTransaction = () => {
+    setDialogMode('addTransaction');
+    setIsDialogOpen(true);
+  };
+  const openNewCategory = () => {
+    setDialogMode('newCategory');
+    setIsDialogOpen(true);
   };
 
   const handleAddTransaction = (data: TransactionBase) => {
@@ -43,6 +58,10 @@ export const NavigationAppbar = () => {
       date: data.date,
     });
     toast.success('Transaction has been created');
+  };
+  const handleNewCategory = (data: CategoryBase) => {
+    addCategory({ name: data.name });
+    toast.success('Category has been created');
   };
 
   return (
@@ -99,11 +118,20 @@ export const NavigationAppbar = () => {
               </Label>
               <div className='mt-4 space-y-2'>
                 <button
-                  onClick={() => setIsDialogOpen(!isDialogOpen)}
+                  onClick={() => openAddTransaction()}
                   className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
                 >
                   <Plus className='h-5 w-5' />
                   <span>Add transaction</span>
+                </button>
+              </div>
+              <div className='mt-4 space-y-2'>
+                <button
+                  onClick={() => openNewCategory()}
+                  className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
+                >
+                  <Tag className='h-5 w-5' />
+                  <span>New category</span>
                 </button>
               </div>
             </div>
@@ -129,17 +157,33 @@ export const NavigationAppbar = () => {
       </Sheet>
 
       {/* Add transaction Dialog */}
-      <TransactionDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title='Add transaction'
-        description='Enter the details for your new transaction.'
-      >
-        <TransactionForm
-          onSubmit={handleAddTransaction}
-          onCancel={() => setIsDialogOpen(!isDialogOpen)}
-        />
-      </TransactionDialog>
+      {dialogMode === 'addTransaction' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='Add transaction'
+          description='Enter the details for your new transaction.'
+        >
+          <TransactionForm
+            onSubmit={handleAddTransaction}
+            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
+      {/* New category dialog */}
+      {dialogMode === 'newCategory' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='New category'
+          description='Enter the name for your new category.'
+        >
+          <CategoryForm
+            onSubmit={handleNewCategory}
+            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
     </nav>
   );
 };

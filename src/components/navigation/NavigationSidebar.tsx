@@ -1,3 +1,5 @@
+import { FormDialog } from '@/components/dialog/FormDialog';
+import { TransactionForm } from '@/components/form/TransactionForm';
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +14,7 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { useCategory, type CategoryBase } from '@/context/categoryContext';
 import { useTheme } from '@/context/themeContext';
 import {
   useTransaction,
@@ -19,17 +22,30 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
-import { MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
+import { MoonIcon, Plus, Star, SunIcon, Tag } from 'lucide-react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'sonner';
-import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
-import { TransactionForm } from '@/pages/transactions/components/TransactionForm';
+import { CategoryForm } from '../form/CategoryForm';
+
+type DialogMode = 'addTransaction' | 'newCategory';
 
 export const NavigationSidebar = () => {
   const { theme, toggleTheme } = useTheme();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
 
   const { addTransaction } = useTransaction();
+  const { addCategory } = useCategory();
+  const [dialogMode, setDialogMode] = useState<DialogMode>('addTransaction');
+
+  const openAddTransaction = () => {
+    setDialogMode('addTransaction');
+    setIsDialogOpen(true);
+  };
+  const openNewCategory = () => {
+    setDialogMode('newCategory');
+    setIsDialogOpen(true);
+  };
 
   const handleAddTransaction = (data: TransactionBase) => {
     const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
@@ -41,6 +57,11 @@ export const NavigationSidebar = () => {
       date: data.date,
     });
     toast.success('Transaction has been created');
+  };
+
+  const handleNewCategory = (data: CategoryBase) => {
+    addCategory({ name: data.name });
+    toast.success('Category has been created');
   };
 
   return (
@@ -99,11 +120,22 @@ export const NavigationSidebar = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip='Add transaction'>
                   <button
-                    onClick={() => setIsDialogOpen(!isDialogOpen)}
+                    onClick={() => openAddTransaction()}
                     className='flex w-full items-center gap-3'
                   >
                     <Plus className='h-4 w-4' />
                     <span>Add transaction</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip='New category'>
+                  <button
+                    onClick={() => openNewCategory()}
+                    className='flex w-full items-center gap-3'
+                  >
+                    <Tag className='h-4 w-4' />
+                    <span>New category</span>
                   </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -144,17 +176,33 @@ export const NavigationSidebar = () => {
       </SidebarFooter>
 
       {/* Add transaction Dialog */}
-      <TransactionDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title='Add transaction'
-        description='Enter the details for your new transaction.'
-      >
-        <TransactionForm
-          onSubmit={handleAddTransaction}
-          onCancel={() => setIsDialogOpen(!isDialogOpen)}
-        />
-      </TransactionDialog>
+      {dialogMode === 'addTransaction' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='Add transaction'
+          description='Enter the details for your new transaction.'
+        >
+          <TransactionForm
+            onSubmit={handleAddTransaction}
+            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
+      {/* New category dialog */}
+      {dialogMode === 'newCategory' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='New category'
+          description='Enter the name for your new category.'
+        >
+          <CategoryForm
+            onSubmit={handleNewCategory}
+            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
     </Sidebar>
   );
 };

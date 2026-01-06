@@ -11,14 +11,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '../../../components/ui/button';
-import { Calendar } from '../../../components/ui/calendar';
+import { Button } from '../ui/button';
+import { Calendar } from '../ui/calendar';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '../../../components/ui/collapsible';
-import { DialogFooter } from '../../../components/ui/dialog';
+} from '../ui/collapsible';
+import { DialogFooter } from '../ui/dialog';
 import {
   Field,
   FieldContent,
@@ -27,10 +27,10 @@ import {
   FieldLabel,
   FieldSet,
   FieldTitle,
-} from '../../../components/ui/field';
-import { Input } from '../../../components/ui/input';
-import { PopoverContent } from '../../../components/ui/popover';
-import { RadioGroup, RadioGroupItem } from '../../../components/ui/radio-group';
+} from '../ui/field';
+import { Input } from '../ui/input';
+import { PopoverContent } from '../ui/popover';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -39,8 +39,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '../../../components/ui/select';
-import { Separator } from '../../../components/ui/separator';
+} from '../ui/select';
+import { Separator } from '../ui/separator';
 
 type TransactionFormProps = {
   transaction?: TransactionItem; // undefined = new, provided = edit mode

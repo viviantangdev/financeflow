@@ -1,4 +1,5 @@
-import { ActionButton } from '@/components/ActionButton';
+import { ActionButton } from '@/components/button/ActionButton';
+import { FormDialog } from '@/components/dialog/FormDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,12 +18,11 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { formatCurrency } from '@/lib/helpers';
-import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { TransactionForm } from '../../components/form/TransactionForm';
 import { TransactionTableCore } from './components/table/TransactionTableCore';
-import { TransactionForm } from './components/TransactionForm';
 
 type DialogMode = 'add' | 'edit' | 'view' | 'delete';
 
@@ -104,7 +104,7 @@ export const TransactionsPage = () => {
 
       {/* Add transaction dialog */}
       {dialogMode === 'add' && (
-        <TransactionDialog
+        <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           title='Add transaction'
@@ -114,11 +114,11 @@ export const TransactionsPage = () => {
             onSubmit={handleAddTransaction}
             onCancel={() => setIsDialogOpen(!isDialogOpen)}
           />
-        </TransactionDialog>
+        </FormDialog>
       )}
       {/* Edit transaction Dialog */}
       {dialogMode === 'edit' && (
-        <TransactionDialog
+        <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           title='Edit transaction'
@@ -129,11 +129,11 @@ export const TransactionsPage = () => {
             onSubmit={handleEdit}
             onCancel={() => setIsDialogOpen(!isDialogOpen)}
           />
-        </TransactionDialog>
+        </FormDialog>
       )}
       {/* View transaction Dialog */}
       {dialogMode === 'view' && (
-        <TransactionDialog
+        <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           title='View transaction'
@@ -160,7 +160,7 @@ export const TransactionsPage = () => {
             <p>Category: {selectedTransaction!.category.name}</p>
             <p>Date: {selectedTransaction!.date}</p>
           </div>
-        </TransactionDialog>
+        </FormDialog>
       )}
       {/* Delete transaction AlertDialog */}
       {dialogMode === 'delete' && (

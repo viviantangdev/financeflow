@@ -5,10 +5,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../../../components/ui/dialog';
-import { Separator } from '../../../components/ui/separator';
+} from '../ui/dialog';
+import { Separator } from '../ui/separator';
 
-type TransactionDialogProps = {
+type FormDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -17,14 +17,14 @@ type TransactionDialogProps = {
   footer?: React.ReactNode;
 };
 
-export const TransactionDialog = ({
+export const FormDialog = ({
   open,
   onOpenChange,
   title,
   description,
   children,
   footer,
-}: TransactionDialogProps) => {
+}: FormDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-106'>

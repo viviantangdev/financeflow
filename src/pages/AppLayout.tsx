@@ -1,7 +1,7 @@
-import { NavigationAppbar } from '@/components/NavigationAppbar';
+import { NavigationAppbar } from '@/components/navigation/NavigationAppbar';
 import { NavMenu } from '@/lib/navMenu';
 import { Outlet, useLocation } from 'react-router-dom';
-import { NavigationSidebar } from '../components/NavigationSidebar';
+import { NavigationSidebar } from '../components/navigation/NavigationSidebar';
 
 export const AppLayout = () => {
   const location = useLocation();
@@ -13,7 +13,7 @@ export const AppLayout = () => {
   );
 
   const pageTitle = currentItem?.title || 'Dashboard';
-  const PageIcon = currentItem!.icon; // Capitalized for clarity
+  const PageIcon = currentItem!.icon;
 
   return (
     <div className=' w-screen md:flex '>
@@ -21,7 +21,7 @@ export const AppLayout = () => {
       <NavigationAppbar />
       <div className='flex-1 my-2 rounded-lg px-3 py-6  flex flex-col gap-8'>
         <header className='flex items-center gap-2'>
-          <PageIcon className='text-emerald-500'/>
+          <PageIcon className='text-emerald-500' />
           <h2 className='text-2xl'>{pageTitle}</h2>
         </header>
         <main className='flex-1'>

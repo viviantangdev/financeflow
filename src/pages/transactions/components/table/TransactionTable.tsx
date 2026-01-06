@@ -1,5 +1,6 @@
 // components/tables/TransactionTableCore.tsx
-import { ActionButton } from '@/components/ActionButton';
+import { ActionButton } from '@/components/button/ActionButton';
+import { FormDialog } from '@/components/dialog/FormDialog';
 import {
   Table,
   TableBody,
@@ -16,11 +17,10 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { formatCurrency } from '@/lib/helpers';
-import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import { toast } from 'sonner';
+import { TransactionForm } from '../../../../components/form/TransactionForm';
 import { columns as baseColumns } from './TransactionColumns';
-import { TransactionForm } from '../TransactionForm';
 
 type TransactionTableProps = {
   table: TanStackTable<TransactionItem>;
@@ -102,7 +102,7 @@ export function TransactionTable({
                   text='Add transaction'
                   onClick={() => setIsDialogOpen(!isDialogOpen)}
                 />
-                <TransactionDialog
+                <FormDialog
                   open={isDialogOpen}
                   onOpenChange={setIsDialogOpen}
                   title='Add transaction'
@@ -112,7 +112,7 @@ export function TransactionTable({
                     onSubmit={handleAddTransaction}
                     onCancel={() => setIsDialogOpen(!isDialogOpen)}
                   />
-                </TransactionDialog>
+                </FormDialog>
               </div>
             </TableCell>
           </TableRow>

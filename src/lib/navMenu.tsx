@@ -1,8 +1,10 @@
 import CashFlowPage from '@/pages/cashFlow/CashFlowPage';
+import { CategoriesPage } from '@/pages/categories/CategoriesPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { TransactionsPage } from '@/pages/transactions/TransactionsPage';
 import {
   LayoutDashboard,
+  Tag,
   TrendingUpDown,
   Wallet,
   type LucideIcon,
@@ -35,5 +37,11 @@ export const NavMenu: NavItem[] = [
     href: '/transactions',
     element: <TransactionsPage />,
     icon: Wallet,
+  },
+  {
+    title: 'Categories',
+    href: '/categories',
+    element: <CategoriesPage />,
+    icon: Tag,
   },
 ];
