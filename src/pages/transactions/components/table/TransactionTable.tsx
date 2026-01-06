@@ -1,6 +1,5 @@
 // components/tables/TransactionTableCore.tsx
 import { ActionButton } from '@/components/ActionButton';
-import { TransactionDialog } from '@/components/TransactionDialog';
 import {
   Table,
   TableBody,
@@ -10,10 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { TransactionItem } from '@/context/transactionContext';
+import {
+  useTransaction,
+  type TransactionBase,
+  type TransactionItem,
+} from '@/context/transactionContext';
+import { useDialog } from '@/hooks/useDialog';
 import { formatCurrency } from '@/lib/helpers';
+import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
+import { toast } from 'sonner';
 import { columns as baseColumns } from './TransactionColumns';
+import { TransactionForm } from '../TransactionForm';
 
 type TransactionTableProps = {
   table: TanStackTable<TransactionItem>;
@@ -24,6 +31,21 @@ export function TransactionTable({
   table,
   hasTransactions,
 }: TransactionTableProps) {
+  const { isDialogOpen, setIsDialogOpen } = useDialog();
+  const { addTransaction } = useTransaction();
+
+  const handleAddTransaction = (data: TransactionBase) => {
+    const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
+    addTransaction({
+      description: data.description,
+      amount: signedAmount,
+      category: data.category,
+      type: data.type,
+      date: data.date,
+    });
+    toast.success('Transaction has been created');
+  };
+
   // Calculate balance from currently visible (filtered) rows
   const visibleBalance = table
     .getFilteredRowModel()
@@ -76,9 +98,21 @@ export function TransactionTable({
                 <p className='text-lg text-muted-foreground'>
                   No transactions yet.
                 </p>
-                <TransactionDialog
-                  trigger={<ActionButton text='Create transaction' />}
+                <ActionButton
+                  text='Add transaction'
+                  onClick={() => setIsDialogOpen(!isDialogOpen)}
                 />
+                <TransactionDialog
+                  open={isDialogOpen}
+                  onOpenChange={setIsDialogOpen}
+                  title='Add transaction'
+                  description='Enter the details for your new transaction.'
+                >
+                  <TransactionForm
+                    onSubmit={handleAddTransaction}
+                    onCancel={() => setIsDialogOpen(!isDialogOpen)}
+                  />
+                </TransactionDialog>
               </div>
             </TableCell>
           </TableRow>

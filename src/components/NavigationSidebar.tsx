@@ -17,14 +17,18 @@ import {
   useTransaction,
   type TransactionBase,
 } from '@/context/transactionContext';
+import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
 import { MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'sonner';
-import { TransactionDialog } from './TransactionDialog';
+import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
+import { TransactionForm } from '@/pages/transactions/components/TransactionForm';
 
 export const NavigationSidebar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { isDialogOpen, setIsDialogOpen } = useDialog();
+
   const { addTransaction } = useTransaction();
 
   const handleAddTransaction = (data: TransactionBase) => {
@@ -93,17 +97,15 @@ export const NavigationSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <TransactionDialog
-                  onSubmit={handleAddTransaction}
-                  trigger={
-                    <SidebarMenuButton asChild tooltip='Create transaction'>
-                      <button className='flex w-full items-center gap-3'>
-                        <Plus className='h-4 w-4' />
-                        <span>Create transaction</span>
-                      </button>
-                    </SidebarMenuButton>
-                  }
-                />
+                <SidebarMenuButton asChild tooltip='Add transaction'>
+                  <button
+                    onClick={() => setIsDialogOpen(!isDialogOpen)}
+                    className='flex w-full items-center gap-3'
+                  >
+                    <Plus className='h-4 w-4' />
+                    <span>Add transaction</span>
+                  </button>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -140,6 +142,19 @@ export const NavigationSidebar = () => {
       <SidebarFooter>
         <SidebarTrigger />
       </SidebarFooter>
+
+      {/* Add transaction Dialog */}
+      <TransactionDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        title='Add transaction'
+        description='Enter the details for your new transaction.'
+      >
+        <TransactionForm
+          onSubmit={handleAddTransaction}
+          onCancel={() => setIsDialogOpen(!isDialogOpen)}
+        />
+      </TransactionDialog>
     </Sidebar>
   );
 };

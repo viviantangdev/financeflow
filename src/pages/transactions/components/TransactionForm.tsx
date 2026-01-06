@@ -11,13 +11,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from './ui/button';
-import { Calendar } from './ui/calendar';
+import { Button } from '../../../components/ui/button';
+import { Calendar } from '../../../components/ui/calendar';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from './ui/collapsible';
+} from '../../../components/ui/collapsible';
+import { DialogFooter } from '../../../components/ui/dialog';
 import {
   Field,
   FieldContent,
@@ -26,10 +27,10 @@ import {
   FieldLabel,
   FieldSet,
   FieldTitle,
-} from './ui/field';
-import { Input } from './ui/input';
-import { PopoverContent } from './ui/popover';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+} from '../../../components/ui/field';
+import { Input } from '../../../components/ui/input';
+import { PopoverContent } from '../../../components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '../../../components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -38,8 +39,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Separator } from './ui/separator';
+} from '../../../components/ui/select';
+import { Separator } from '../../../components/ui/separator';
 
 type TransactionFormProps = {
   transaction?: TransactionItem; // undefined = new, provided = edit mode
@@ -47,7 +48,7 @@ type TransactionFormProps = {
   onCancel: () => void;
 };
 
-const TransactionForm = ({
+export const TransactionForm = ({
   transaction,
   onSubmit,
   onCancel,
@@ -115,6 +116,7 @@ const TransactionForm = ({
       type: data.type,
       date: format(data.date, 'yyyy-MM-dd'),
     });
+    onCancel();
   };
 
   const toggleShowAddCategory = () => {
@@ -345,7 +347,9 @@ const TransactionForm = ({
                     }`}
                   >
                     <span>
-                      {field.value ? format(field.value, 'yyyy-MM-dd') : 'Pick a date'}
+                      {field.value
+                        ? format(field.value, 'yyyy-MM-dd')
+                        : 'Pick a date'}
                     </span>
                     <ChevronDownIcon />
                   </Button>
@@ -366,26 +370,19 @@ const TransactionForm = ({
         />
       </FieldGroup>
 
-      <div className='grid gap-2'>
+      <DialogFooter>
+        <Button type='button' variant='outline' onClick={onCancel}>
+          Cancel
+        </Button>
         <Button
           type='submit'
           variant='default'
           disabled={isSubmitting}
-          className='w-full primaryButton'
+          className='primaryButton'
         >
           {transaction ? 'Update' : 'Save'}
         </Button>
-        <Button
-          type='button'
-          variant='outline'
-          onClick={onCancel}
-          className='w-full'
-        >
-          Cancel
-        </Button>
-      </div>
+      </DialogFooter>
     </form>
   );
 };
-
-export default TransactionForm;

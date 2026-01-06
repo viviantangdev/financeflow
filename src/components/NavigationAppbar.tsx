@@ -3,12 +3,14 @@ import {
   useTransaction,
   type TransactionBase,
 } from '@/context/transactionContext';
+import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
+import { TransactionDialog } from '@/pages/transactions/components/TransactionDialog';
+import { TransactionForm } from '@/pages/transactions/components/TransactionForm';
 import { Menu, MoonIcon, Plus, Star, SunIcon } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
-import { TransactionDialog } from './TransactionDialog';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import {
@@ -23,9 +25,11 @@ export const NavigationAppbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { isDialogOpen, setIsDialogOpen } = useDialog();
+
   const { addTransaction } = useTransaction();
 
-  const handleClose = () => {
+  const handleCloseAppbar = () => {
     setOpen(false);
   };
 
@@ -70,7 +74,7 @@ export const NavigationAppbar = () => {
                       key={item.title}
                       to={item.href}
                       end
-                      onClick={handleClose}
+                      onClick={handleCloseAppbar}
                       className={({ isActive }) =>
                         `flex items-center gap-3 rounded-md px-3 py-2.5 text-lg transition-colors ${
                           isActive && 'bg-accent font-semibold'
@@ -94,15 +98,13 @@ export const NavigationAppbar = () => {
                 Quick Actions
               </Label>
               <div className='mt-4 space-y-2'>
-                <TransactionDialog
-                  onSubmit={handleAddTransaction}
-                  trigger={
-                    <button className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'>
-                      <Plus className='h-5 w-5' />
-                      <span>Create transaction</span>
-                    </button>
-                  }
-                />
+                <button
+                  onClick={() => setIsDialogOpen(!isDialogOpen)}
+                  className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
+                >
+                  <Plus className='h-5 w-5' />
+                  <span>Add transaction</span>
+                </button>
               </div>
             </div>
             {/* Settings Section */}
@@ -125,6 +127,19 @@ export const NavigationAppbar = () => {
           </section>
         </SheetContent>
       </Sheet>
+
+      {/* Add transaction Dialog */}
+      <TransactionDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        title='Add transaction'
+        description='Enter the details for your new transaction.'
+      >
+        <TransactionForm
+          onSubmit={handleAddTransaction}
+          onCancel={() => setIsDialogOpen(!isDialogOpen)}
+        />
+      </TransactionDialog>
     </nav>
   );
 };
