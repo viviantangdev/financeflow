@@ -60,7 +60,7 @@ export const NavigationSidebar = () => {
   };
 
   const handleNewCategory = (data: CategoryBase) => {
-    addCategory({ name: data.name });
+    addCategory({ name: data.name, iconName: data.iconName });
     toast.success('Category has been created');
   };
 

@@ -10,7 +10,7 @@ import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
 import { Menu, MoonIcon, Plus, Star, SunIcon, Tag } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { CategoryForm } from '../form/CategoryForm';
 import { Label } from '../ui/label';
@@ -60,16 +60,18 @@ export const NavigationAppbar = () => {
     toast.success('Transaction has been created');
   };
   const handleNewCategory = (data: CategoryBase) => {
-    addCategory({ name: data.name });
+    addCategory({ name: data.name, iconName: data.iconName });
     toast.success('Category has been created');
   };
 
   return (
     <nav className='md:hidden flex justify-between p-3'>
-      <div className='flex'>
-        <Star />
-        <span>FinanceFlow</span>
-      </div>
+      <Link to={'/'}>
+        <div className='flex gap-1'>
+          <Star />
+          <span>FinanceFlow</span>
+        </div>
+      </Link>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Menu />
