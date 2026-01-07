@@ -42,12 +42,10 @@ export const CashFlowChartCore = () => {
       .filter((t) => t.type === 'Income')
       .reduce((sum, t) => sum + t.amount, 0);
 
-    const expense = Math.abs(
-      filtered
-        .filter((t) => t.type === 'Expense')
-        .reduce((sum, t) => sum + t.amount, 0)
-    );
-
+    const expense = filtered
+      .filter((t) => t.type === 'Expense')
+      .reduce((sum, t) => sum + t.amount, 0);
+      
     return {
       filteredBalance: balance,
       filteredIncome: income,

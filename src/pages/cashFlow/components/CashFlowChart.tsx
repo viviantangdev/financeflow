@@ -13,9 +13,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { formatCompactNumber, formatCurrency } from '@/lib/helpers';
+import { formatCurrency } from '@/lib/helpers';
 import { format } from 'date-fns';
-import { TrendingDown, TrendingUp, TrendingUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, PiggyBank } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 type CashFlowChartProps = {
@@ -35,10 +35,9 @@ export function CashFlowChart({
   viewMode,
   selectedDate,
 }: CashFlowChartProps) {
-
-  const balanceAmount = formatCurrency(balance)
-  const incomeAmount = formatCompactNumber(income)
-  const expenseAmount = formatCompactNumber(expense)
+  const balanceAmount = formatCurrency(balance);
+  const incomeAmount = formatCurrency(income);
+  const expenseAmount = formatCurrency((expense));
 
   const chartConfig = {
     income: { label: 'Income', color: 'var(--chart-1)' },
@@ -59,48 +58,52 @@ export function CashFlowChart({
         <CardDescription>
           Showing total for selected period - {periodLabel}
         </CardDescription>
-        <div className='py-3 flex justify-between'>
-          {/* Balance */}
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center gap-2'>
-              <TrendingUpDown className='h-4 w-4' />
-              <span className='text-sm font-medium text-muted-foreground'>
-                Balance
-              </span>
-            </div>
-            <span
-              className={`text-3xl font-bold
-                ${balance > 0 && 'text-emerald-600'}
-                ${balance < 0 && 'text-red-600'}
-               ${balance === 0 && 'text-foreground'}`}
-            >
-              {balanceAmount}
+      </CardHeader>
+      <CardContent className='flex flex-wrap gap-2'>
+        {/* Balance */}
+        <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+          <div className='flex items-center gap-2'>
+            <PiggyBank />
+            <span className='text-sm font-medium text-muted-foreground'>
+              Balance
             </span>
           </div>
-
-          {/* Income */}
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center gap-2'>
-              <TrendingUp className='h-4 w-4 text-emerald-500' />
-              <span className='text-sm font-medium text-muted-foreground'>
-                Income
-              </span>
-            </div>
-            <span className='text-3xl font-bold'>${incomeAmount}</span>
-          </div>
-
-          {/* Expense */}
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center gap-2'>
-              <TrendingDown className='h-4 w-4 text-red-500' />
-              <span className='text-sm font-medium text-muted-foreground'>
-                Expense
-              </span>
-            </div>
-            <span className='text-3xl font-bold'>${expenseAmount}</span>
-          </div>
+          <span
+            className={`text-lg font-bold text-shadow-2xs
+                ${balance > 0 && 'text-emerald-500'}
+                ${balance < 0 && 'text-red-600'}
+               ${balance === 0 && 'text-foreground'}`}
+          >
+            {balanceAmount}
+          </span>
         </div>
-      </CardHeader>
+
+        {/* Income */}
+        <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+          <div className='flex items-center gap-2'>
+            <ArrowUp className='text-emerald-500' />
+            <span className='text-sm font-medium text-muted-foreground'>
+              Income
+            </span>
+          </div>
+          <span className='text-lg font-bold text-shadow-2xs text-emerald-500'>
+            {incomeAmount}
+          </span>
+        </div>
+
+        {/* Expense */}
+        <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+          <div className='flex items-center gap-2'>
+            <ArrowDown className=' text-red-500' />
+            <span className='text-sm font-medium text-muted-foreground'>
+              Expense
+            </span>
+          </div>
+          <span className='text-lg font-bold text-shadow-2xs text-red-500'>
+            {expenseAmount}
+          </span>
+        </div>
+      </CardContent>
       <CardContent>
         {chartData.length > 0 ? (
           <ChartContainer

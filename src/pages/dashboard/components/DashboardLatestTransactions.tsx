@@ -8,29 +8,39 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useTransaction } from '@/context/transactionContext';
 import { formatCurrency } from '@/lib/helpers';
+import { iconMap } from '@/lib/icons';
 import { format } from 'date-fns';
 import { MoveRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-export const DashboardRecentTransactions = () => {
+
+export const DashboardLatestTransactions = () => {
   const { transactions } = useTransaction();
-  const recentItems = transactions.slice(0, 5);
+  const latestItems = transactions.slice(0, 5);
+
   return (
     <section className='space-y-3'>
       <Link to={'/transactions'}>
         <Card className='group cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5'>
           <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
+            <CardTitle>Latest Transactions</CardTitle>
           </CardHeader>
           <CardContent className='space-y-3'>
-            {recentItems.map((item) => {
+            {latestItems.map((item) => {
+              const Icon = iconMap[item.category.iconName];
+
               return (
                 <div key={item.id} className='space-y-3'>
                   <div className='flex flex-row items-end'>
-                    <div className='flex flex-1 flex-col gap-0.5'>
-                      <span>{item.description}</span>
-                      <span className='text-sm text-muted-foreground'>
-                        {format(item.date, 'MMMM dd, yyyy')}
-                      </span>
+                    <div className='flex flex-1 gap-3'>
+                      <div className='flex items-center justify-center border rounded-full p-3 bg-muted'>
+                        <Icon size={20} />
+                      </div>
+                      <div className='flex flex-col gap-0.5'>
+                        <span>{item.description}</span>
+                        <span className='text-sm text-muted-foreground'>
+                          {format(item.date, 'MMMM dd, yyyy')}
+                        </span>
+                      </div>
                     </div>
                     <span
                       className={`${

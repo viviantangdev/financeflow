@@ -27,7 +27,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -5000,
     type: 'Expense',
     category: { id: '1', name: 'Housing', iconName: 'House' },
-    date: '2026-01-15',
+    date: '2026-01-07',
   },
   {
     id: '2',
@@ -35,7 +35,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -200,
     type: 'Expense',
     category: { id: '2', name: 'Food', iconName: 'Apple' },
-    date: '2026-01-15',
+    date: '2026-01-05',
   },
   {
     id: '3',
@@ -43,7 +43,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -500,
     type: 'Expense',
     category: { id: '3', name: 'Transportation', iconName: 'Bike' },
-    date: '2026-02-15',
+    date: '2026-02-06',
   },
   {
     id: '4',
@@ -51,7 +51,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -100,
     type: 'Expense',
     category: { id: '4', name: 'Lifestyle', iconName: 'Shirt' },
-    date: '2026-01-15',
+    date: '2026-01-01',
   },
   {
     id: '5',
@@ -59,7 +59,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: -5000,
     type: 'Expense',
     category: { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
-    date: '2026-01-15',
+    date: '2026-01-02',
   },
   {
     id: '6',
@@ -67,7 +67,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: 5000,
     type: 'Income',
     category: { id: '6', name: 'Wages', iconName: 'Wallet' },
-    date: '2026-01-15',
+    date: '2026-01-01',
   },
 ];
 

@@ -281,7 +281,7 @@ export const TransactionForm = ({
                         />
 
                         {/* Icon Picker for New Category */}
-                        <div>
+                        <div className='space-y-3'>
                           <Label>Select icon</Label>
 
                           <div className='grid grid-cols-6 gap-2'>
@@ -305,7 +305,7 @@ export const TransactionForm = ({
                         </div>
 
                         {/* Action Buttons */}
-                        <div className='flex gap-2'>
+                        <div className='flex gap-2 mt-6'>
                           <Button
                             size='sm'
                             onClick={handleAddCategory}
