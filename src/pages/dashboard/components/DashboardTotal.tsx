@@ -28,13 +28,13 @@ export const DashboardTotal = () => {
             <CardDescription>Showing totals from All time</CardDescription>
           </CardHeader>
           <CardContent className='flex flex-wrap gap-2'>
-            <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+            <div className='flex-1 flex flex-col gap-2 p-3 rounded-lg'>
               <div className='flex items-center gap-3'>
                 <PiggyBank />
                 <span className='text-sm text-muted-foreground'>Balance</span>
               </div>
               <span
-                className={`text-lg font-bold text-shadow-2xs
+                className={`text-lg font-bold text-shadow-2xs ml-3
                  ${balance === 0 && 'text-foreground'}
                  ${balance < 0 && 'text-red-500'}
                  ${balance > 0 && 'text-emerald-500'}`}
@@ -43,21 +43,21 @@ export const DashboardTotal = () => {
               </span>
             </div>
 
-            <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+            <div className='flex-1 flex flex-col gap-2 p-3 rounded-lg'>
               <div className='flex items-center gap-3'>
                 <ArrowUp className='text-emerald-500' />
                 <span className='text-sm text-muted-foreground'>Income</span>
               </div>
-              <span className='text-lg font-bold text-shadow-2xs text-emerald-500'>
+              <span className='text-lg font-bold text-shadow-2xs text-emerald-500 ml-3'>
                 {incomeAmount}
               </span>
             </div>
-            <div className='flex-1 flex flex-col justify-center items-center gap-2 p-3 border rounded-lg'>
+            <div className='flex-1 flex flex-col gap-2 p-3 rounded-lg'>
               <div className='flex items-center gap-3'>
                 <ArrowDown className='text-red-500' />
                 <span className='text-sm text-muted-foreground'>Expense</span>
               </div>
-              <span className='text-lg font-bold text-shadow-2xs text-red-500'>
+              <span className='text-lg font-bold text-shadow-2xs text-red-500 ml-3'>
                 {expenseAmount}
               </span>
             </div>

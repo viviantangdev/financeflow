@@ -82,7 +82,7 @@ export const CategoriesPage = () => {
             <Card key={item.id}>
               <CardHeader className='flex justify-between items-center flex-wrap gap-5'>
                 <CardTitle className='flex items-center flex-wrap gap-3'>
-                  <div className='border rounded-full p-3 bg-muted'>
+                  <div className='iconBadge'>
                     <Icon />
                   </div>
 

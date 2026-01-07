@@ -54,7 +54,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.98 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -82,15 +82,15 @@
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(26.9% 0 0);
+  --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.2 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
+  --muted: oklch(0.145 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
@@ -103,7 +103,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --sidebar: oklch(0.145 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -118,9 +118,11 @@
     @apply border-border outline-ring/50 transition duration-200 scroll-auto;
   }
   body {
-    @apply bg-neutral-50 text-black;
+    /* @apply bg-neutral-50 text-black; */
+    @apply text-black bg-radial-[circle_at_50%_50%] from-blue-100 via-white to-indigo-100;
     @variant dark {
-      @apply bg-neutral-900 text-white;
+      /* @apply bg-neutral-900 text-white; */
+      @apply text-white bg-radial-[circle_at_50%_50%] from-blue-950/80 via-slate-900 to-black;
     }
   }
 }
@@ -135,18 +137,45 @@
 button {
   @apply cursor-pointer;
 }
+
+.navigationButton {
+  @apply bg-linear-to-br from-blue-400 to-indigo-500 
+         border border-blue-300/50 text-white;
+
+  @variant dark {
+    @apply bg-linear-to-br from-blue-500/90 to-indigo-700/90 
+         border border-white/10 text-white;
+  }
+}
+
 .primaryButton {
-  @apply bg-emerald-500;
+  @apply bg-linear-to-br from-blue-400 to-indigo-500 
+         border border-blue-300/50 text-white 
+         transition-all duration-300 ease-out;
   &:hover {
-    @apply bg-emerald-600;
+    @apply from-blue-500 to-indigo-600 shadow-lg scale-[1.01]
+           shadow-blue-400/40;
   }
   @variant dark {
-    @apply bg-emerald-500;
+    @apply bg-linear-to-br from-blue-500/90 to-indigo-700/90 
+         border border-white/10 text-white 
+         transition-all duration-300 ease-out;
     &:hover {
-      @apply bg-emerald-600;
+      @apply from-blue-500/90 to-indigo-700/90 shadow-blue-500/30 scale-[1.01] shadow-lg;
     }
   }
 }
+
+.iconBadge {
+  @apply rounded-full p-3 bg-linear-to-br from-blue-400 to-indigo-500 
+         border border-blue-300/50 text-white;
+
+  @variant dark {
+    @apply rounded-full p-3  bg-linear-to-br from-blue-500/90 to-indigo-700/90 
+         border border-white/10 text-white;
+  }
+}
+
 .errorButton {
   @apply bg-red-500;
   &:hover {
@@ -160,10 +189,9 @@ button {
   }
 }
 
-
 .radioItem {
-  @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
+  @apply [&_svg]:fill-blue-500 data-[state=checked]:ring-1 data-[state=checked]:ring-blue-500;
   @variant dark {
-    @apply [&_svg]:fill-green-500 data-[state=checked]:ring-1 data-[state=checked]:ring-emerald-500;
+    @apply [&_svg]:fill-blue-500 data-[state=checked]:ring-1 data-[state=checked]:ring-blue-500;
   }
 }

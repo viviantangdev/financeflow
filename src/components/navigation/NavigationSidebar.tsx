@@ -69,7 +69,7 @@ export const NavigationSidebar = () => {
       <SidebarHeader>
         <SidebarMenuButton asChild>
           <NavLink to='/'>
-            <Star className='h-5 w-5' />
+            <Star />
             <span>FinanceFlow</span>
           </NavLink>
         </SidebarMenuButton>
@@ -93,13 +93,11 @@ export const NavigationSidebar = () => {
                       <NavLink
                         to={item.href}
                         end
-                        className={`flex items-center gap-3 w-full ${
-                          isActive && 'bg-accent font-semibold'
+                        className={`flex items-center gap-3 w-full my-0.5 ${
+                          isActive && 'navigationButton font-semibold'
                         }`}
                       >
-                        <item.icon
-                          className={`${isActive && 'text-emerald-500'}`}
-                        />
+                        <item.icon className={`${isActive && 'font-bold'}`} />
                         <span>{item.title}</span>
                       </NavLink>
                     </SidebarMenuButton>

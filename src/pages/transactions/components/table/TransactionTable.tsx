@@ -77,7 +77,7 @@ export function TransactionTable({
         ))}
       </TableHeader>
 
-      <TableBody>
+      <TableBody className='bg-card'>
         {hasTransactions ? (
           table.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>

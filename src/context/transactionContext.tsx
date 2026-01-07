@@ -56,7 +56,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '5',
     description: 'Movies',
-    amount: -5000,
+    amount: -50,
     type: 'Expense',
     category: { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
     date: '2026-01-02',
@@ -67,7 +67,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     amount: 5000,
     type: 'Income',
     category: { id: '6', name: 'Wages', iconName: 'Wallet' },
-    date: '2026-01-01',
+    date: '2026-01-07',
   },
 ];
 

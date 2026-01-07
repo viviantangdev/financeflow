@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 
 export const DashboardLatestTransactions = () => {
   const { transactions } = useTransaction();
-  const latestItems = transactions.slice(0, 5);
+  // const latestItems = transactions.slice(0, 5);
 
   return (
     <section className='space-y-3'>
@@ -25,14 +25,14 @@ export const DashboardLatestTransactions = () => {
             <CardTitle>Latest Transactions</CardTitle>
           </CardHeader>
           <CardContent className='space-y-3'>
-            {latestItems.map((item) => {
+            {transactions.map((item) => {
               const Icon = iconMap[item.category.iconName];
 
               return (
                 <div key={item.id} className='space-y-3'>
                   <div className='flex flex-row items-end'>
                     <div className='flex flex-1 gap-3'>
-                      <div className='flex items-center justify-center border rounded-full p-3 bg-muted'>
+                      <div className='flex items-center justify-center iconBadge'>
                         <Icon size={20} />
                       </div>
                       <div className='flex flex-col gap-0.5'>

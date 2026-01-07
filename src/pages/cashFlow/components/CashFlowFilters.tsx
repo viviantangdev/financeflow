@@ -44,7 +44,7 @@ export function CashFlowFilters({
       </Tabs>
 
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild className='bg-muted!'>
           <Button
             variant='outline'
             className='w-50 justify-between text-left font-normal'

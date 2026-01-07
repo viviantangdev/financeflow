@@ -98,13 +98,13 @@ export const NavigationAppbar = () => {
                       onClick={handleCloseAppbar}
                       className={({ isActive }) =>
                         `flex items-center gap-3 rounded-md px-3 py-2.5 text-lg transition-colors ${
-                          isActive && 'bg-accent font-semibold'
+                          isActive && 'navigationButton font-semibold'
                         }`
                       }
                     >
                       <item.icon
                         className={`h-5 w-5 ${
-                          isActive ? 'text-emerald-500' : ''
+                          isActive ? 'font-bold' : ''
                         }`}
                       />
                       <span>{item.title}</span>

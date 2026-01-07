@@ -86,7 +86,7 @@ export function TransactionFilters({ table }: TransactionFiltersProps) {
       {/* Category Popover Filter */}
 
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild className='bg-muted!'>
           <Button variant='outline' size='default' className='justify-between'>
             <span>Category</span>
             {selectedCategoryValues.size > 0 && (
@@ -124,14 +124,10 @@ export function TransactionFilters({ table }: TransactionFiltersProps) {
                     >
                       <div
                         className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary
-                            ${
-                              isSelected
-                                ? 'bg-primary text-primary-foreground'
-                                : 'opacity-50'
-                            }
+                            ${isSelected ? ' bg-blue-500' : 'opacity-50'}
                           `}
                       >
-                        {isSelected && <Check className='h-4 w-4' />}
+                        {isSelected && <Check className='h-4 w-4 text-white' />}
                       </div>
                       <Icon />
                       <span>{category.name}</span>
