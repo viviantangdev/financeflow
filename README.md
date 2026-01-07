@@ -1,6 +1,6 @@
 # Finance Flow | Personal balance tracker
 
-[🔗 Live Demo](financeflow-viviantangdev-viviantangdev.vercel.app)
+[🔗 Live Demo](https://financeflow-viviantangdev.vercel.app/)
 
 ## ✨ Features
 - Dashboard with overviews of you transactions and cash flow.
