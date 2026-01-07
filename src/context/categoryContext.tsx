@@ -1,9 +1,11 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import type { iconMap } from '@/lib/icons';
 import type React from 'react';
 import { createContext, useContext } from 'react';
 
 export interface CategoryBase {
   name: string;
+  iconName: keyof typeof iconMap;
 }
 
 export interface CategoryItem extends CategoryBase {
@@ -11,14 +13,13 @@ export interface CategoryItem extends CategoryBase {
 }
 
 const DEFAULT_CATEGORIES: CategoryItem[] = [
-  { id: '1', name: 'Housing' },
-  { id: '2', name: 'Food' },
-  { id: '3', name: 'Transportation' },
-  { id: '4', name: 'Lifestyle' },
-  { id: '5', name: 'Entertainment' },
-  { id: '6', name: 'Wages' },
+  { id: '1', name: 'Housing', iconName: 'House' },
+  { id: '2', name: 'Food', iconName: 'Apple' },
+  { id: '3', name: 'Transportation', iconName: 'Bike' },
+  { id: '4', name: 'Lifestyle', iconName: 'Shirt' },
+  { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
+  { id: '6', name: 'Wages', iconName: 'Wallet' },
 ];
-
 interface CategoryContextType {
   categories: CategoryItem[];
   addCategory: (category: CategoryBase) => void;

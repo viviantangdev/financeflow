@@ -19,6 +19,7 @@ import {
   type CategoryItem,
 } from '@/context/categoryContext';
 import { useDialog } from '@/hooks/useDialog';
+import { iconMap } from '@/lib/icons';
 import { Edit2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -54,11 +55,14 @@ export const CategoriesPage = () => {
   };
 
   const handleAdd = (data: CategoryBase) => {
-    addCategory({ name: data.name });
+    addCategory({ name: data.name, iconName: data.iconName });
     toast.success('Category has been created');
   };
   const handleEdit = (data: CategoryBase) => {
-    updateCategory(selectedCategory!.id, { name: data.name });
+    updateCategory(selectedCategory!.id, {
+      name: data.name,
+      iconName: data.iconName,
+    });
     toast.success('Category has been updated');
   };
   const handleDelete = (data: CategoryItem) => {
@@ -72,31 +76,40 @@ export const CategoriesPage = () => {
         <ActionButton text='New category' onClick={() => openAdd()} />
       </section>
       <section className='space-y-3'>
-        {categories.map((item) => (
-          <Card key={item.id}>
-            <CardHeader className='flex justify-between items-center flex-wrap gap-5'>
-              <CardTitle>{item.name}</CardTitle>
-              <CardAction className='space-x-2'>
-                <Button
-                  variant={'outline'}
-                  size={'icon'}
-                  onClick={() => openEdit(item)}
-                  className='text-emerald-500'
-                >
-                  <Edit2 />
-                </Button>
-                <Button
-                  variant={'outline'}
-                  size={'icon'}
-                  onClick={() => openDelete(item)}
-                  className='text-red-500'
-                >
-                  <Trash2 />
-                </Button>
-              </CardAction>
-            </CardHeader>
-          </Card>
-        ))}
+        {categories.map((item) => {
+          const Icon = iconMap[item.iconName];
+          return (
+            <Card key={item.id}>
+              <CardHeader className='flex justify-between items-center flex-wrap gap-5'>
+                <CardTitle className='flex items-center flex-wrap gap-3'>
+                  <div className='border rounded-full p-3 bg-muted'>
+                    <Icon />
+                  </div>
+
+                  <span>{item.name}</span>
+                </CardTitle>
+                <CardAction className='space-x-2'>
+                  <Button
+                    variant={'outline'}
+                    size={'icon'}
+                    onClick={() => openEdit(item)}
+                    className='text-emerald-500'
+                  >
+                    <Edit2 />
+                  </Button>
+                  <Button
+                    variant={'outline'}
+                    size={'icon'}
+                    onClick={() => openDelete(item)}
+                    className='text-red-500'
+                  >
+                    <Trash2 />
+                  </Button>
+                </CardAction>
+              </CardHeader>
+            </Card>
+          );
+        })}
       </section>
 
       {/* New category dialog */}
@@ -109,7 +122,7 @@ export const CategoriesPage = () => {
         >
           <CategoryForm
             onSubmit={handleAdd}
-            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+            onCancel={() => setIsDialogOpen(false)}
           />
         </FormDialog>
       )}
@@ -124,7 +137,7 @@ export const CategoriesPage = () => {
           <CategoryForm
             category={selectedCategory!}
             onSubmit={handleEdit}
-            onCancel={() => setIsDialogOpen(!isDialogOpen)}
+            onCancel={() => setIsDialogOpen(false)}
           />
         </FormDialog>
       )}

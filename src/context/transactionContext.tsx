@@ -26,7 +26,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Rent',
     amount: -5000,
     type: 'Expense',
-    category: { id: '1', name: 'Housing' },
+    category: { id: '1', name: 'Housing', iconName: 'House' },
     date: '2026-01-15',
   },
   {
@@ -34,7 +34,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Groceries',
     amount: -200,
     type: 'Expense',
-    category: { id: '2', name: 'Food' },
+    category: { id: '2', name: 'Food', iconName: 'Apple' },
     date: '2026-01-15',
   },
   {
@@ -42,7 +42,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Gas',
     amount: -500,
     type: 'Expense',
-    category: { id: '3', name: 'Transportation' },
+    category: { id: '3', name: 'Transportation', iconName: 'Bike' },
     date: '2026-02-15',
   },
   {
@@ -50,7 +50,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Clothing',
     amount: -100,
     type: 'Expense',
-    category: { id: '4', name: 'Lifestyle' },
+    category: { id: '4', name: 'Lifestyle', iconName: 'Shirt' },
     date: '2026-01-15',
   },
   {
@@ -58,7 +58,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Movies',
     amount: -5000,
     type: 'Expense',
-    category: { id: '5', name: 'Entertainment' },
+    category: { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
     date: '2026-01-15',
   },
   {
@@ -66,7 +66,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
     description: 'Bonus',
     amount: 5000,
     type: 'Income',
-    category: { id: '6', name: 'Wages' },
+    category: { id: '6', name: 'Wages', iconName: 'Wallet' },
     date: '2026-01-15',
   },
 ];

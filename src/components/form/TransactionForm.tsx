@@ -5,9 +5,9 @@ import {
   type TransactionItem,
   type TransactionType,
 } from '@/context/transactionContext';
+import { iconList, iconMap } from '@/lib/icons';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
 import { format } from 'date-fns';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronDownIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -29,6 +29,7 @@ import {
   FieldTitle,
 } from '../ui/field';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import { PopoverContent } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import {
@@ -57,6 +58,7 @@ export const TransactionForm = ({
   const [showAddCategory, setShowAddCategory] = useState(false);
   const { categories, addCategory } = useCategory();
   const [newCategory, setNewCategory] = useState('');
+  const [newCategoryIconKey, setNewCategoryIconKey] = useState<string>('X'); // default icon
 
   const {
     register,
@@ -119,13 +121,15 @@ export const TransactionForm = ({
     onCancel();
   };
 
-  const toggleShowAddCategory = () => {
-    setShowAddCategory(!showAddCategory);
+  const handleAddCategory = () => {
+    addCategory({ name: newCategory, iconName: newCategoryIconKey });
+    resetAddCategory();
   };
 
-  const handleAddCategory = () => {
-    addCategory({ name: newCategory });
-    toggleShowAddCategory();
+  const resetAddCategory = () => {
+    setShowAddCategory(false);
+    setNewCategory('');
+    setNewCategoryIconKey('X');
   };
 
   return (
@@ -218,9 +222,7 @@ export const TransactionForm = ({
           control={control}
           rules={{
             validate: (value) =>
-              value && categories.some((c) => c.id === value.id)
-                ? true
-                : 'Please select a category.',
+              value != null || 'Please select or create a category.',
           }}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -242,81 +244,102 @@ export const TransactionForm = ({
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent align='end' position='popper'>
+                  {/* Create New Category Section */}
                   <Collapsible
                     open={showAddCategory}
-                    onOpenChange={toggleShowAddCategory}
+                    onOpenChange={setShowAddCategory}
                   >
                     <CollapsibleTrigger asChild>
                       <Button
                         variant='ghost'
-                        size='icon'
+                        type='button'
                         className='w-full flex justify-between p-2'
                       >
                         <div className='flex items-center gap-1'>
                           <Plus />
                           <span>Create category</span>
                         </div>
-                        <motion.div
-                          animate={{ rotate: showAddCategory ? 180 : 0 }}
-                          transition={{ duration: 0.25, ease: 'easeInOut' }}
-                          style={{ originY: 'center', originX: 'center' }}
-                        >
-                          <ChevronDown className='h-4 w-4 opacity-50' />
-                        </motion.div>
+                        <ChevronDown
+                          className={`h-4 w-4 opacity-50 transition-transform duration-200 ${
+                            showAddCategory ? 'rotate-180' : ''
+                          }`}
+                        />
                       </Button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent forceMount>
-                      <AnimatePresence initial={false}>
-                        {showAddCategory && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{
-                              height: { duration: 0.25, ease: 'easeInOut' },
-                              opacity: { duration: 0.2 },
-                            }}
-                            className='overflow-hidden'
-                          >
-                            <div className='space-y-3 p-5'>
-                              <Input
-                                placeholder='New category name'
-                                autoFocus
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Escape') {
-                                    setShowAddCategory(false);
-                                  }
-                                }}
-                              />
-                              <div className='flex gap-2'>
-                                <Button size='sm' onClick={handleAddCategory}>
-                                  Create
-                                </Button>
-                                <Button
-                                  size='sm'
-                                  variant='outline'
-                                  onClick={() => setShowAddCategory(false)}
+                    <CollapsibleContent>
+                      <div className='space-y-3 p-5'>
+                        {/* New Category Name */}
+
+                        <Label>Category name</Label>
+                        <Input
+                          placeholder='New category name'
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          onKeyDown={(e) =>
+                            e.key === 'Escape' && resetAddCategory()
+                          }
+                        />
+
+                        {/* Icon Picker for New Category */}
+                        <div>
+                          <Label>Select icon</Label>
+
+                          <div className='grid grid-cols-6 gap-2'>
+                            {iconList.map((key) => {
+                              const Icon = iconMap[key];
+                              return (
+                                <button
+                                  key={key}
+                                  type='button'
+                                  onClick={() => setNewCategoryIconKey(key)}
+                                  className={`p-3 rounded-lg border-2 transition-all flex items-center justify-center ${
+                                    newCategoryIconKey === key &&
+                                    'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                                  }`}
                                 >
-                                  Cancel
-                                </Button>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                                  <Icon className='w-5 h-5' />
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className='flex gap-2'>
+                          <Button
+                            size='sm'
+                            onClick={handleAddCategory}
+                            disabled={!newCategory}
+                          >
+                            Create
+                          </Button>
+                          <Button
+                            size='sm'
+                            variant='outline'
+                            onClick={resetAddCategory}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
                     </CollapsibleContent>
                   </Collapsible>
 
                   <Separator />
+                  {/* Existing Categories */}
                   <SelectGroup>
                     <SelectLabel>Categories</SelectLabel>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
+                    {categories.map((c) => {
+                      const Icon = iconMap[c.iconName] ?? iconMap.X;
+                      return (
+                        <SelectItem key={c.id} value={c.id}>
+                          <div className='flex items-center gap-2'>
+                            <Icon className='w-4 h-4' />
+                            <span>{c.name}</span>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectGroup>
                 </SelectContent>
               </Select>

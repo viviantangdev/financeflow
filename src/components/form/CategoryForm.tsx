@@ -1,15 +1,17 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {
   type CategoryBase,
   type CategoryItem,
 } from '@/context/categoryContext';
-import { useEffect } from 'react';
+import { iconList, iconMap } from '@/lib/icons';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { DialogFooter } from '../ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 
-type TransactionFormProps = {
+type CategoryFormProps = {
   category?: CategoryItem; // undefined = new, provided = edit mode
   onSubmit: (data: CategoryBase) => void;
   onCancel: () => void;
@@ -19,7 +21,11 @@ export const CategoryForm = ({
   category,
   onSubmit,
   onCancel,
-}: TransactionFormProps) => {
+}: CategoryFormProps) => {
+  const [selectedIconKey, setSelectedIconKey] = useState<string>(
+    category?.iconName ?? 'X' // default to X if creating new
+  );
+
   const {
     register,
     handleSubmit,
@@ -29,27 +35,30 @@ export const CategoryForm = ({
     name: string;
   }>({
     defaultValues: {
-      name: '',
+      name: category?.name ?? '',
     },
   });
 
-  // Sync form with category prop (for create vs edit)
+  // Sync form with category changes (for create vs edit)
   useEffect(() => {
     if (category) {
       reset({
         name: category.name,
       });
+      setSelectedIconKey(category.iconName);
     } else {
       // Reset to empty for new category
       reset({
         name: '',
       });
+      setSelectedIconKey('X');
     }
   }, [category, reset]);
 
   const onFormSubmit = (data: { name: string }) => {
     onSubmit({
       name: data.name,
+      iconName: selectedIconKey,
     });
     onCancel();
   };
@@ -78,6 +87,30 @@ export const CategoryForm = ({
             }
           />
           {errors.name && <FieldError errors={[errors.name]} />}
+        </Field>
+        {/* Icon Picker */}
+        <Field>
+          <FieldLabel>Icon</FieldLabel>
+          <div className='flex flex-wrap gap-1.5'>
+            {iconList.map((key) => {
+              const Icon = iconMap[key];
+              return (
+                <Button
+                  key={key}
+                  variant={'outline'}
+                  type='button'
+                  size={'icon'}
+                  onClick={() => setSelectedIconKey(key)}
+                  className={`${
+                    selectedIconKey === key &&
+                    'border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500'
+                  }`}
+                >
+                  <Icon />
+                </Button>
+              );
+            })}
+          </div>
         </Field>
       </FieldGroup>
 
