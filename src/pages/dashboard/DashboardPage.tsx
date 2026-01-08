@@ -10,11 +10,11 @@ export const DashboardPage = () => {
         <DashboardTotal />
       </section> */}
       <section>
-        <div className='flex gap-3'>
-          <div className='flex-1'>
+        <div className='flex gap-3 h-60 flex-wrap'>
+          <div className='flex-1 h-full'>
             <DashboardBalance />
           </div>
-          <div className='flex-1'>
+          <div className='flex-1 h-full'>
             <DashboardCashflow />
           </div>
         </div>

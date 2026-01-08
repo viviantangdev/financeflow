@@ -137,7 +137,16 @@ export const TransferForm = ({ onSubmit, onCancel }: TransferFormProps) => {
           name='toAccount'
           control={control}
           rules={{
-            validate: (value) => value != null || 'Please select an account.',
+            validate: (value, formValues) => {
+              if (!value) return 'Please select an account.';
+              if (
+                formValues.fromAccount &&
+                value.id === formValues.fromAccount.id
+              ) {
+                return 'Cannot transfer to the same account.';
+              }
+              return true;
+            },
           }}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -187,10 +196,19 @@ export const TransferForm = ({ onSubmit, onCancel }: TransferFormProps) => {
           <FieldLabel>Amount</FieldLabel>
           <Input
             {...register('amount', {
-              required: 'Amount is required',
-              validate: (value) => {
+              required: 'Amount is required.',
+              validate: (value, formValues) => {
                 const num = Number(value);
-                return (!isNaN(num) && num >= 1) || 'Amount must be at least 1';
+                if (isNaN(num)) return 'Must be a valid number.';
+                if (num < 1) return 'Amount must be at least 1.';
+                // Insufficient funds check
+                const fromAccount = formValues.fromAccount;
+                if (fromAccount && num > fromAccount.balance) {
+                  return `Insufficient funds. Available: ${
+                    fromAccount.name
+                  } ${formatCurrency(fromAccount.balance)} `;
+                }
+                return true;
               },
             })}
             type='number'
@@ -232,10 +250,11 @@ export const TransferForm = ({ onSubmit, onCancel }: TransferFormProps) => {
                     <ChevronDownIcon />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align='end' side='bottom'>
+                <PopoverContent align='start' side='bottom'>
                   <Calendar
                     mode='single'
                     selected={field.value}
+
                     onSelect={field.onChange}
                   />
                 </PopoverContent>

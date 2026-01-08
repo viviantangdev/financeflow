@@ -11,13 +11,15 @@ import { formatCurrency } from '@/lib/helpers';
 export const DashboardBalance = () => {
   const { totalAccountBalance } = useAccount();
   return (
-    <Card>
+    <Card className='h-full'>
       <CardHeader>
-        <CardTitle>Total balance</CardTitle>
-        <CardDescription>Across all accounts</CardDescription>
+        <CardTitle className='text-center'>Total balance</CardTitle>
+        <CardDescription className='text-center'>
+          Across all accounts
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <span className='text-2xl'>{formatCurrency(totalAccountBalance)}</span>
+      <CardContent className='flex items-center h-full'>
+        <span className='text-2xl text-center w-full'>{formatCurrency(totalAccountBalance)}</span>
       </CardContent>
     </Card>
   );

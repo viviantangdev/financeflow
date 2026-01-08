@@ -9,6 +9,7 @@ export type AccountBase = {
 export interface AccountItem extends AccountBase {
   id: string;
 }
+
 export type TransferBase = {
   fromAccountId: string;
   toAccountId: string;
@@ -20,7 +21,7 @@ export interface TransferItem extends TransferBase {
 }
 
 const DEFAULT_ACCOUNTS: AccountItem[] = [
-  { id: '1', name: 'Debit', balance: -100000 },
+  { id: '1', name: 'Debit', balance: 100 },
   { id: '2', name: 'Saving', balance: 100 },
   { id: '3', name: 'Cash', balance: 100 },
 ];

@@ -86,12 +86,12 @@ export const AccountForm = ({
           <FieldLabel>Balance</FieldLabel>
           <Input
             {...register('balance', {
-              required: 'Balance is required',
+              required: 'Balance is required.',
               validate: (value) => {
                 const num = Number(value);
-                return (
-                  (!isNaN(num) && num >= 1) || 'Balance must be at least 1'
-                );
+                if (isNaN(num)) return 'Must be a valid number.';
+                if (num < 1) return 'Balance must be at least 1.';
+                return true;
               },
             })}
             type='number'

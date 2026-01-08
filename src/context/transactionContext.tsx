@@ -2,6 +2,7 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { format } from 'date-fns';
 import { createContext, useContext, useMemo } from 'react';
+import type { AccountItem } from './accountContext';
 import type { CategoryItem } from './categoryContext';
 
 export const TRANSACTION_TYPES = ['Income', 'Expense'];
@@ -12,6 +13,7 @@ export interface TransactionBase {
   amount: number;
   category: CategoryItem;
   type: TransactionType;
+  account: AccountItem;
   date: string; // ISO format: 'YYYY-MM-DD'
 }
 
@@ -24,49 +26,55 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '1',
     description: 'Rent',
-    amount: -5000,
+    amount: -200,
     type: 'Expense',
     category: { id: '1', name: 'Housing', iconName: 'House' },
+    account: { id: '1', name: 'Debit', balance: 100 },
     date: '2026-01-07',
   },
   {
     id: '2',
     description: 'Groceries',
-    amount: -200,
+    amount: -90,
     type: 'Expense',
     category: { id: '2', name: 'Food', iconName: 'Apple' },
+    account: { id: '1', name: 'Debit', balance: 100 },
     date: '2026-01-05',
   },
   {
     id: '3',
     description: 'Gas',
-    amount: -500,
+    amount: -50,
     type: 'Expense',
     category: { id: '3', name: 'Transportation', iconName: 'Bike' },
-    date: '2026-02-06',
+    account: { id: '1', name: 'Debit', balance: 100 },
+    date: '2026-01-06',
   },
   {
     id: '4',
     description: 'Clothing',
-    amount: -100,
+    amount: -10,
     type: 'Expense',
     category: { id: '4', name: 'Lifestyle', iconName: 'Shirt' },
-    date: '2026-01-01',
+    account: { id: '1', name: 'Debit', balance: 100 },
+    date: '2027-01-01',
   },
   {
     id: '5',
     description: 'Movies',
-    amount: -50,
+    amount: -20,
     type: 'Expense',
     category: { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
+    account: { id: '2', name: 'Saving', balance: 100 },
     date: '2026-01-02',
   },
   {
     id: '6',
     description: 'Bonus',
-    amount: 5000,
+    amount: 200,
     type: 'Income',
     category: { id: '6', name: 'Wages', iconName: 'Wallet' },
+    account: { id: '1', name: 'Debit', balance: 100 },
     date: '2026-01-07',
   },
 ];

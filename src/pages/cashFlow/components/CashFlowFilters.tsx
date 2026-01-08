@@ -6,10 +6,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAccount, type AccountItem } from '@/context/accountContext';
 import { format } from 'date-fns';
 import { ChevronsUpDown } from 'lucide-react';
+import type { ViewMode } from '../CashFlowPage';
 
-type ViewMode = 'year' | 'month' | 'day';
 
 type CashFlowFiltersProps = {
   viewMode: ViewMode;
@@ -17,6 +18,8 @@ type CashFlowFiltersProps = {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
   years: number[];
+  selectedAccount: AccountItem | undefined;
+  setSelectedAccount: (account: AccountItem | undefined) => void;
 };
 
 export function CashFlowFilters({
@@ -25,13 +28,18 @@ export function CashFlowFilters({
   selectedDate,
   setSelectedDate,
   years,
+  selectedAccount,
+  setSelectedAccount,
 }: CashFlowFiltersProps) {
-  const displayLabel =
+  const { accounts } = useAccount();
+  const displayDate =
     viewMode === 'year'
       ? selectedDate.getFullYear()
       : viewMode === 'month'
       ? format(selectedDate, 'MMMM yyyy')
       : format(selectedDate, 'MMM dd, yyyy');
+  const displayAccount =
+    selectedAccount === undefined ? 'All accounts' : selectedAccount.name;
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
@@ -49,7 +57,7 @@ export function CashFlowFilters({
             variant='outline'
             className='w-50 justify-between text-left font-normal'
           >
-            <span>{displayLabel}</span>
+            <span>{displayDate}</span>
             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
           </Button>
         </PopoverTrigger>
@@ -95,6 +103,38 @@ export function CashFlowFilters({
               ))}
             </div>
           )}
+        </PopoverContent>
+      </Popover>
+
+      <Popover>
+        <PopoverTrigger asChild className='bg-muted!'>
+          <Button
+            variant='outline'
+            className='w-50 justify-between text-left font-normal'
+          >
+            <span>{displayAccount}</span>
+            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className='w-auto p-0' align='end'>
+          <div className='space-x-2 space-y-2 p-3 max-w-65'>
+            <Button
+              variant={selectedAccount === undefined ? 'default' : 'outline'}
+              onClick={() => setSelectedAccount(undefined)}
+            >
+              All accounts
+            </Button>
+            {accounts.map((acc) => (
+              <Button
+                key={acc.id}
+                variant={selectedAccount?.id === acc.id ? 'default' : 'outline'}
+                size='sm'
+                onClick={() => setSelectedAccount(acc)}
+              >
+                {acc.name}
+              </Button>
+            ))}
+          </div>
         </PopoverContent>
       </Popover>
     </div>
