@@ -41,6 +41,7 @@ export function TransactionTable({
       amount: signedAmount,
       category: data.category,
       type: data.type,
+      account: data.account,
       date: data.date,
     });
     toast.success('Transaction has been created');
@@ -99,13 +100,13 @@ export function TransactionTable({
                   No transactions yet.
                 </p>
                 <ActionButton
-                  text='Add transaction'
+                  text='New transaction'
                   onClick={() => setIsDialogOpen(!isDialogOpen)}
                 />
                 <FormDialog
                   open={isDialogOpen}
                   onOpenChange={setIsDialogOpen}
-                  title='Add transaction'
+                  title='New transaction'
                   description='Enter the details for your new transaction.'
                 >
                   <TransactionForm

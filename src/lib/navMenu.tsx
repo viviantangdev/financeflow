@@ -4,11 +4,11 @@ import { CategoriesPage } from '@/pages/categories/CategoriesPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { TransactionsPage } from '@/pages/transactions/TransactionsPage';
 import {
-  AlignEndHorizontal,
+  Activity,
   CreditCard,
   LayoutDashboard,
-  Repeat,
-  Tag,
+  Receipt,
+  Tags,
   type LucideIcon,
 } from 'lucide-react';
 import type React from 'react';
@@ -32,19 +32,19 @@ export const NavMenu: NavItem[] = [
     title: 'Cash Flow',
     href: '/cashflow',
     element: <CashFlowPage />,
-    icon: AlignEndHorizontal,
+    icon: Activity,
   },
   {
     title: 'Transactions',
     href: '/transactions',
     element: <TransactionsPage />,
-    icon: Repeat,
+    icon: Receipt,
   },
   {
     title: 'Categories',
     href: '/categories',
     element: <CategoriesPage />,
-    icon: Tag,
+    icon: Tags,
   },
   {
     title: 'Account',

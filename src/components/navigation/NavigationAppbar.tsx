@@ -1,5 +1,10 @@
 import { FormDialog } from '@/components/dialog/FormDialog';
 import { TransactionForm } from '@/components/form/TransactionForm';
+import {
+  useAccount,
+  type AccountBase,
+  type TransferBase,
+} from '@/context/accountContext';
 import { useCategory, type CategoryBase } from '@/context/categoryContext';
 import { useTheme } from '@/context/themeContext';
 import {
@@ -8,7 +13,7 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
-import { Menu, MoonIcon, Plus, Star, SunIcon, Tag } from 'lucide-react';
+import { ArrowRightLeft, CreditCard, Menu, MoonIcon, Receipt, Star, SunIcon, Tags } from 'lucide-react';
 import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -22,29 +27,43 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
+import { AccountForm } from '../form/AccountForm';
+import { TransferForm } from '../form/TransferForm';
 
-type DialogMode = 'addTransaction' | 'newCategory';
+type DialogMode = 'transaction' | 'category' | 'account' | 'transfer';
 
 export const NavigationAppbar = () => {
-  const [open, setOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
-  const [dialogMode, setDialogMode] = useState<DialogMode>('addTransaction');
 
   const { addTransaction } = useTransaction();
   const { addCategory } = useCategory();
+  const { addAccount, transferMoney } = useAccount();
+
+  const [open, setOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<DialogMode | undefined>(
+    undefined
+  );
 
   const handleCloseAppbar = () => {
     setOpen(false);
   };
 
   const openAddTransaction = () => {
-    setDialogMode('addTransaction');
+    setDialogMode('transaction');
     setIsDialogOpen(true);
   };
   const openNewCategory = () => {
-    setDialogMode('newCategory');
+    setDialogMode('category');
+    setIsDialogOpen(true);
+  };
+  const openAccount = () => {
+    setDialogMode('account');
+    setIsDialogOpen(true);
+  };
+  const openTransfer = () => {
+    setDialogMode('transfer');
     setIsDialogOpen(true);
   };
 
@@ -55,13 +74,22 @@ export const NavigationAppbar = () => {
       amount: signedAmount,
       category: data.category,
       type: data.type,
+      account: data.account,
       date: data.date,
     });
     toast.success('Transaction has been created');
   };
   const handleNewCategory = (data: CategoryBase) => {
-    addCategory({ name: data.name, iconName: data.iconName });
+    addCategory(data);
     toast.success('Category has been created');
+  };
+  const handleAddAccount = (data: AccountBase) => {
+    addAccount(data);
+    toast.success('Account has been created');
+  };
+  const handleTransfer = (data: TransferBase) => {
+    transferMoney(data);
+    toast.success('Transfer has been created');
   };
 
   return (
@@ -103,9 +131,7 @@ export const NavigationAppbar = () => {
                       }
                     >
                       <item.icon
-                        className={`h-5 w-5 ${
-                          isActive ? 'font-bold' : ''
-                        }`}
+                        className={`h-5 w-5 ${isActive ? 'font-bold' : ''}`}
                       />
                       <span>{item.title}</span>
                     </NavLink>
@@ -123,8 +149,8 @@ export const NavigationAppbar = () => {
                   onClick={() => openAddTransaction()}
                   className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
                 >
-                  <Plus className='h-5 w-5' />
-                  <span>Add transaction</span>
+                  <Receipt className='h-5 w-5' />
+                  <span>New transaction</span>
                 </button>
               </div>
               <div className='mt-4 space-y-2'>
@@ -132,8 +158,26 @@ export const NavigationAppbar = () => {
                   onClick={() => openNewCategory()}
                   className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
                 >
-                  <Tag className='h-5 w-5' />
+                  <Tags className='h-5 w-5' />
                   <span>New category</span>
+                </button>
+              </div>
+              <div className='mt-4 space-y-2'>
+                <button
+                  onClick={() => openAccount()}
+                  className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
+                >
+                  <CreditCard className='h-5 w-5' />
+                  <span>New account</span>
+                </button>
+              </div>
+              <div className='mt-4 space-y-2'>
+                <button
+                  onClick={() => openTransfer()}
+                  className='flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-lg hover:bg-accent/50 transition-colors'
+                >
+                  <ArrowRightLeft className='h-5 w-5' />
+                  <span>Transfer</span>
                 </button>
               </div>
             </div>
@@ -159,11 +203,11 @@ export const NavigationAppbar = () => {
       </Sheet>
 
       {/* Add transaction Dialog */}
-      {dialogMode === 'addTransaction' && (
+      {dialogMode === 'transaction' && (
         <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
-          title='Add transaction'
+          title='New transaction'
           description='Enter the details for your new transaction.'
         >
           <TransactionForm
@@ -173,7 +217,7 @@ export const NavigationAppbar = () => {
         </FormDialog>
       )}
       {/* New category dialog */}
-      {dialogMode === 'newCategory' && (
+      {dialogMode === 'category' && (
         <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
@@ -183,6 +227,34 @@ export const NavigationAppbar = () => {
           <CategoryForm
             onSubmit={handleNewCategory}
             onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
+      {/* New account dialog */}
+      {dialogMode === 'account' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='New account'
+          description='Enter the name and current balance for your new account.'
+        >
+          <AccountForm
+            onSubmit={handleAddAccount}
+            onCancel={() => setIsDialogOpen(false)}
+          />
+        </FormDialog>
+      )}
+      {/* Transfer dialog */}
+      {dialogMode === 'transfer' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='Transfer'
+          description='Select accounts, amount and date of your transfer.'
+        >
+          <TransferForm
+            onSubmit={handleTransfer}
+            onCancel={() => setIsDialogOpen(false)}
           />
         </FormDialog>
       )}

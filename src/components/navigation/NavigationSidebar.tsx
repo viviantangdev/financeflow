@@ -14,6 +14,11 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import {
+  useAccount,
+  type AccountBase,
+  type TransferBase,
+} from '@/context/accountContext';
 import { useCategory, type CategoryBase } from '@/context/categoryContext';
 import { useTheme } from '@/context/themeContext';
 import {
@@ -22,13 +27,23 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
-import { MoonIcon, Plus, Star, SunIcon, Tag } from 'lucide-react';
+import {
+  ArrowRightLeft,
+  CreditCard,
+  MoonIcon,
+  Receipt,
+  Star,
+  SunIcon,
+  Tags,
+} from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AccountForm } from '../form/AccountForm';
 import { CategoryForm } from '../form/CategoryForm';
+import { TransferForm } from '../form/TransferForm';
 
-type DialogMode = 'addTransaction' | 'newCategory';
+type DialogMode = 'transaction' | 'category' | 'account' | 'transfer';
 
 export const NavigationSidebar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -36,14 +51,26 @@ export const NavigationSidebar = () => {
 
   const { addTransaction } = useTransaction();
   const { addCategory } = useCategory();
-  const [dialogMode, setDialogMode] = useState<DialogMode>('addTransaction');
+  const { addAccount, transferMoney } = useAccount();
 
-  const openAddTransaction = () => {
-    setDialogMode('addTransaction');
+  const [dialogMode, setDialogMode] = useState<DialogMode | undefined>(
+    undefined
+  );
+
+  const openTransaction = () => {
+    setDialogMode('transaction');
     setIsDialogOpen(true);
   };
-  const openNewCategory = () => {
-    setDialogMode('newCategory');
+  const openCategory = () => {
+    setDialogMode('category');
+    setIsDialogOpen(true);
+  };
+  const openAccount = () => {
+    setDialogMode('account');
+    setIsDialogOpen(true);
+  };
+  const openTransfer = () => {
+    setDialogMode('transfer');
     setIsDialogOpen(true);
   };
 
@@ -54,14 +81,22 @@ export const NavigationSidebar = () => {
       amount: signedAmount,
       category: data.category,
       type: data.type,
+      account: data.account,
       date: data.date,
     });
     toast.success('Transaction has been created');
   };
-
   const handleNewCategory = (data: CategoryBase) => {
-    addCategory({ name: data.name, iconName: data.iconName });
+    addCategory(data);
     toast.success('Category has been created');
+  };
+  const handleAddAccount = (data: AccountBase) => {
+    addAccount(data);
+    toast.success('Account has been created');
+  };
+  const handleTransfer = (data: TransferBase) => {
+    transferMoney(data);
+    toast.success('Transfer has been created');
   };
 
   return (
@@ -116,24 +151,46 @@ export const NavigationSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip='Add transaction'>
+                <SidebarMenuButton asChild tooltip='New transaction'>
                   <button
-                    onClick={() => openAddTransaction()}
+                    onClick={() => openTransaction()}
                     className='flex w-full items-center gap-3'
                   >
-                    <Plus className='h-4 w-4' />
-                    <span>Add transaction</span>
+                    <Receipt className='h-4 w-4' />
+                    <span>New transaction</span>
                   </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip='New category'>
                   <button
-                    onClick={() => openNewCategory()}
+                    onClick={() => openCategory()}
                     className='flex w-full items-center gap-3'
                   >
-                    <Tag className='h-4 w-4' />
+                    <Tags className='h-4 w-4' />
                     <span>New category</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip='New account'>
+                  <button
+                    onClick={() => openAccount()}
+                    className='flex w-full items-center gap-3'
+                  >
+                    <CreditCard className='h-4 w-4' />
+                    <span>New account</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip='Transfer'>
+                  <button
+                    onClick={() => openTransfer()}
+                    className='flex w-full items-center gap-3'
+                  >
+                    <ArrowRightLeft className='h-4 w-4' />
+                    <span>Transfer</span>
                   </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -174,11 +231,11 @@ export const NavigationSidebar = () => {
       </SidebarFooter>
 
       {/* Add transaction Dialog */}
-      {dialogMode === 'addTransaction' && (
+      {dialogMode === 'transaction' && (
         <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
-          title='Add transaction'
+          title='New transaction'
           description='Enter the details for your new transaction.'
         >
           <TransactionForm
@@ -188,7 +245,7 @@ export const NavigationSidebar = () => {
         </FormDialog>
       )}
       {/* New category dialog */}
-      {dialogMode === 'newCategory' && (
+      {dialogMode === 'category' && (
         <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
@@ -198,6 +255,34 @@ export const NavigationSidebar = () => {
           <CategoryForm
             onSubmit={handleNewCategory}
             onCancel={() => setIsDialogOpen(!isDialogOpen)}
+          />
+        </FormDialog>
+      )}
+      {/* New account dialog */}
+      {dialogMode === 'account' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='New account'
+          description='Enter the name and current balance for your new account.'
+        >
+          <AccountForm
+            onSubmit={handleAddAccount}
+            onCancel={() => setIsDialogOpen(false)}
+          />
+        </FormDialog>
+      )}
+      {/* Transfer dialog */}
+      {dialogMode === 'transfer' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='Transfer'
+          description='Select accounts, amount and date of your transfer.'
+        >
+          <TransferForm
+            onSubmit={handleTransfer}
+            onCancel={() => setIsDialogOpen(false)}
           />
         </FormDialog>
       )}

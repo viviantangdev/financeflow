@@ -65,6 +65,7 @@ export const TransactionsPage = () => {
       amount: signedAmount,
       category: data.category,
       type: data.type,
+      account: data.account,
       date: data.date,
     });
     toast.success('Transaction has been created');
@@ -90,7 +91,7 @@ export const TransactionsPage = () => {
   return (
     <div className='space-y-10'>
       <section>
-        <ActionButton text='Add transaction' onClick={openAdd} />
+        <ActionButton text='New transaction' onClick={openAdd} />
       </section>
 
       {/* Table with filters */}
@@ -107,7 +108,7 @@ export const TransactionsPage = () => {
         <FormDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
-          title='Add transaction'
+          title='New transaction'
           description='Enter the details for your new transaction.'
         >
           <TransactionForm

@@ -157,7 +157,7 @@ export const AccountPage = () => {
       </section>
 
       {/**Dialogs */}
-      {/* New card dialog */}
+      {/* New account dialog */}
       {dialogMode === 'add' && (
         <FormDialog
           open={isDialogOpen}

@@ -254,7 +254,6 @@ export const TransferForm = ({ onSubmit, onCancel }: TransferFormProps) => {
                   <Calendar
                     mode='single'
                     selected={field.value}
-
                     onSelect={field.onChange}
                   />
                 </PopoverContent>
