@@ -1,6 +1,5 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import type { iconMap } from '@/lib/icons';
-import type React from 'react';
 import { createContext, useContext } from 'react';
 
 export interface CategoryBase {

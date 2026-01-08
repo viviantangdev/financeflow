@@ -1,9 +1,11 @@
+import { AccountPage } from '@/pages/account/AccountPage';
 import CashFlowPage from '@/pages/cashFlow/CashFlowPage';
 import { CategoriesPage } from '@/pages/categories/CategoriesPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { TransactionsPage } from '@/pages/transactions/TransactionsPage';
 import {
   AlignEndHorizontal,
+  CreditCard,
   LayoutDashboard,
   Repeat,
   Tag,
@@ -43,5 +45,11 @@ export const NavMenu: NavItem[] = [
     href: '/categories',
     element: <CategoriesPage />,
     icon: Tag,
+  },
+  {
+    title: 'Account',
+    href: '/account',
+    element: <AccountPage />,
+    icon: CreditCard,
   },
 ];

@@ -118,7 +118,7 @@ export const CategoriesPage = () => {
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           title='New category'
-          description='Enter the name for your new category.'
+          description='Enter the name and select an icon for your new category.'
         >
           <CategoryForm
             onSubmit={handleAdd}
