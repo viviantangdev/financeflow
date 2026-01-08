@@ -1,5 +1,6 @@
 import { FormDialog } from '@/components/dialog/FormDialog';
 import { AccountForm } from '@/components/form/AccountForm';
+import { TransferForm } from '@/components/form/TransferForm';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +32,7 @@ import {
   useAccount,
   type AccountBase,
   type AccountItem,
+  type TransferBase,
 } from '@/context/accountContext';
 import { useDialog } from '@/hooks/useDialog';
 import { formatCompactNumber } from '@/lib/helpers';
@@ -38,16 +40,18 @@ import { Edit2, Ellipsis, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-type DialogMode = 'add' | 'edit' | 'delete';
+type DialogMode = 'add' | 'edit' | 'delete' | 'transfer';
 
 export const AccountPage = () => {
-  const { accounts, addAccount, updateAccount, deleteAccount } = useAccount();
+  const { accounts, addAccount, updateAccount, deleteAccount, transferMoney } =
+    useAccount();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
   const [dialogMode, setDialogMode] = useState<DialogMode>('add');
   const [selectedAccount, setSelectedAccount] = useState<AccountItem | null>(
     null
   );
 
+  /**Handle dialog */
   const openAdd = () => {
     setDialogMode('add');
     setSelectedAccount(null);
@@ -58,13 +62,17 @@ export const AccountPage = () => {
     setSelectedAccount(data);
     setIsDialogOpen(true);
   };
-
   const openDelete = (data: AccountItem) => {
     setDialogMode('delete');
     setSelectedAccount(data);
     setIsDialogOpen(true);
   };
-
+  const openTransfer = () => {
+    setDialogMode('transfer');
+    setSelectedAccount(null);
+    setIsDialogOpen(true);
+  };
+  /**Handle account & transfer*/
   const handleAddAccount = (data: AccountBase) => {
     addAccount(data);
     toast.success('Account has been created');
@@ -77,15 +85,23 @@ export const AccountPage = () => {
     deleteAccount(data.id);
     toast.success('Account has been deleted');
   };
-
+  const handleTransfer = (data: TransferBase) => {
+    transferMoney(data);
+    toast.success('Transfer has been created');
+  };
   return (
     <>
+      {/**Buttons section */}
       <section>
         <Button type='button' onClick={openAdd}>
           New account
         </Button>
-        <Button>Transfer</Button>
+        <Button type='button' onClick={openTransfer}>
+          Transfer
+        </Button>
       </section>
+
+      {/**Account section */}
       <section className='flex flex-wrap gap-3'>
         {accounts.map((item) => (
           <Card className='flex-1'>
@@ -195,6 +211,20 @@ export const AccountPage = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+      )}
+      {/* Transfer dialog */}
+      {dialogMode === 'transfer' && (
+        <FormDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title='Transfer'
+          description='Select accounts, amount and date of your transfer.'
+        >
+          <TransferForm
+            onSubmit={handleTransfer}
+            onCancel={() => setIsDialogOpen(false)}
+          />
+        </FormDialog>
       )}
     </>
   );
