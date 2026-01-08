@@ -1,3 +1,4 @@
+import { ActionButton } from '@/components/button/ActionButton';
 import { FormDialog } from '@/components/dialog/FormDialog';
 import { AccountForm } from '@/components/form/AccountForm';
 import { TransferForm } from '@/components/form/TransferForm';
@@ -72,6 +73,7 @@ export const AccountPage = () => {
     setSelectedAccount(null);
     setIsDialogOpen(true);
   };
+
   /**Handle account & transfer*/
   const handleAddAccount = (data: AccountBase) => {
     addAccount(data);
@@ -89,22 +91,21 @@ export const AccountPage = () => {
     transferMoney(data);
     toast.success('Transfer has been created');
   };
+
   return (
-    <>
+    <div className='space-y-10'>
       {/**Buttons section */}
       <section>
-        <Button type='button' onClick={openAdd}>
-          New account
-        </Button>
-        <Button type='button' onClick={openTransfer}>
-          Transfer
-        </Button>
+        <div className='space-x-3'>
+          <ActionButton text='New account' onClick={openAdd} />
+          <ActionButton text='Transfer' onClick={openTransfer} />
+        </div>
       </section>
 
       {/**Account section */}
       <section className='flex flex-wrap gap-3'>
         {accounts.map((item) => (
-          <Card className='flex-1'>
+          <Card key={item.id} className='flex-1'>
             <CardHeader>
               <div className='flex items-end justify-between'>
                 <CardTitle className='uppercase'>{item.name}</CardTitle>
@@ -154,6 +155,8 @@ export const AccountPage = () => {
           </Card>
         ))}
       </section>
+
+      {/**Dialogs */}
       {/* New card dialog */}
       {dialogMode === 'add' && (
         <FormDialog
@@ -226,6 +229,6 @@ export const AccountPage = () => {
           />
         </FormDialog>
       )}
-    </>
+    </div>
   );
 };

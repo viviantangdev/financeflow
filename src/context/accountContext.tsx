@@ -26,6 +26,7 @@ const DEFAULT_ACCOUNTS: AccountItem[] = [
 ];
 
 type AccountContextType = {
+  totalAccountBalance: number;
   accounts: AccountItem[];
   addAccount: (account: AccountBase) => void;
   updateAccount: (id: string, updates: Partial<AccountItem>) => void;
@@ -48,6 +49,11 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     'TRANSFERS',
     []
   );
+
+  // Calculate balance from accounts
+  const totalAccountBalance = accounts.reduce((acc, t) => {
+    return acc + t.balance;
+  }, 0);
 
   const addAccount = (newAccount: AccountBase) => {
     const account: AccountItem = {
@@ -97,6 +103,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   return (
     <AccountContext.Provider
       value={{
+        totalAccountBalance,
         accounts,
         addAccount,
         updateAccount,

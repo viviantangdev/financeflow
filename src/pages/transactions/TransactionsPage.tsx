@@ -88,13 +88,13 @@ export const TransactionsPage = () => {
   };
 
   return (
-    <div className='flex flex-col gap-5'>
+    <div className='space-y-10'>
       <section>
         <ActionButton text='Add transaction' onClick={openAdd} />
       </section>
 
       {/* Table with filters */}
-      <section className='space-y-3 '>
+      <section>
         <TransactionTableCore
           onEdit={openEdit}
           onDelete={openDelete}

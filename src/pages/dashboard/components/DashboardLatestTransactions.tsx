@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -18,49 +19,49 @@ export const DashboardLatestTransactions = () => {
   // const latestItems = transactions.slice(0, 5);
 
   return (
-    <section className='space-y-3'>
-      <Link to={'/transactions'}>
-        <Card className='group cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5'>
-          <CardHeader>
-            <CardTitle>Latest Transactions</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-3'>
-            {transactions.map((item) => {
-              const Icon = iconMap[item.category.iconName];
+    <Card>
+      <CardHeader>
+        <CardTitle>Latest Transactions</CardTitle>
+      </CardHeader>
+      <CardContent className='space-y-3'>
+        {transactions.map((item) => {
+          const Icon = iconMap[item.category.iconName];
 
-              return (
-                <div key={item.id} className='space-y-3'>
-                  <div className='flex flex-row items-end'>
-                    <div className='flex flex-1 gap-3'>
-                      <div className='flex items-center justify-center iconBadge'>
-                        <Icon size={20} />
-                      </div>
-                      <div className='flex flex-col gap-0.5'>
-                        <span>{item.description}</span>
-                        <span className='text-sm text-muted-foreground'>
-                          {format(item.date, 'MMMM dd, yyyy')}
-                        </span>
-                      </div>
-                    </div>
-                    <span
-                      className={`${
-                        item.amount > 0 ? 'text-emerald-500' : 'text-red-500'
-                      }`}
-                    >
-                      {formatCurrency(item.amount, { compact: false })}
+          return (
+            <div key={item.id} className='space-y-3'>
+              <div className='flex flex-row items-end'>
+                <div className='flex flex-1 gap-3'>
+                  <div className='flex items-center justify-center iconBadge'>
+                    <Icon size={20} />
+                  </div>
+                  <div className='flex flex-col gap-0.5'>
+                    <span>{item.description}</span>
+                    <span className='text-sm text-muted-foreground'>
+                      {format(item.date, 'MMMM dd, yyyy')}
                     </span>
                   </div>
-                  <Separator />
                 </div>
-              );
-            })}
-          </CardContent>
-          <CardFooter className='flex gap-2'>
-            <span className='text-sm font-medium '>View more transactions</span>
+                <span
+                  className={`${
+                    item.amount > 0 ? 'text-emerald-500' : 'text-red-500'
+                  }`}
+                >
+                  {formatCurrency(item.amount, { compact: false })}
+                </span>
+              </div>
+              <Separator />
+            </div>
+          );
+        })}
+      </CardContent>
+      <CardFooter>
+        <Link to={'/transactions'}>
+          <Button type='button' variant={'ghost'} className='group'>
+            <span className='text-sm font-medium '>View all transactions</span>
             <MoveRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
-          </CardFooter>
-        </Card>
-      </Link>
-    </section>
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 };
