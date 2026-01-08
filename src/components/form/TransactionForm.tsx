@@ -1,3 +1,4 @@
+import { useAccount, type AccountItem } from '@/context/accountContext';
 import { useCategory, type CategoryItem } from '@/context/categoryContext';
 import {
   TRANSACTION_TYPES,
@@ -5,6 +6,7 @@ import {
   type TransactionItem,
   type TransactionType,
 } from '@/context/transactionContext';
+import { formatCurrency } from '@/lib/helpers';
 import { iconList, iconMap } from '@/lib/icons';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
 import { format } from 'date-fns';
@@ -49,6 +51,8 @@ type TransactionFormProps = {
   onCancel: () => void;
 };
 
+/// Form for transaction
+// - Add/Edit transaction /
 export const TransactionForm = ({
   transaction,
   onSubmit,
@@ -56,7 +60,10 @@ export const TransactionForm = ({
 }: TransactionFormProps) => {
   const [calenderOpen, setCalenderOpen] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
+
   const { categories, addCategory } = useCategory();
+  const { accounts } = useAccount();
+
   const [newCategory, setNewCategory] = useState('');
   const [newCategoryIconKey, setNewCategoryIconKey] = useState<string>('X'); // default icon
 
@@ -71,6 +78,7 @@ export const TransactionForm = ({
     amount: string;
     type: TransactionType;
     category: CategoryItem;
+    account: AccountItem;
     date: Date;
   }>({
     defaultValues: {
@@ -78,6 +86,7 @@ export const TransactionForm = ({
       amount: '',
       type: undefined as TransactionType | undefined,
       category: undefined as CategoryItem | undefined,
+      account: undefined as AccountItem | undefined,
       date: new Date(),
     },
   });
@@ -90,6 +99,7 @@ export const TransactionForm = ({
         amount: Math.abs(transaction.amount).toString(),
         type: transaction.type,
         category: transaction.category,
+        account: transaction.account,
         date: new Date(transaction.date), // convert "YYYY-MM-DD" → Date
       });
     } else {
@@ -99,6 +109,7 @@ export const TransactionForm = ({
         amount: '',
         type: undefined,
         category: undefined,
+        account: undefined,
         date: new Date(), // todays date
       });
     }
@@ -109,6 +120,7 @@ export const TransactionForm = ({
     amount: string;
     type: TransactionType;
     category: CategoryItem;
+    account: AccountItem;
     date: Date;
   }) => {
     onSubmit({
@@ -116,6 +128,7 @@ export const TransactionForm = ({
       amount: Number(data.amount),
       category: data.category,
       type: data.type,
+      account: data.account,
       date: format(data.date, 'yyyy-MM-dd'),
     });
     onCancel();
@@ -199,9 +212,22 @@ export const TransactionForm = ({
           <Input
             {...register('amount', {
               required: 'Amount is required',
-              validate: (value) => {
+              validate: (value, formValues) => {
                 const num = Number(value);
-                return (!isNaN(num) && num >= 1) || 'Amount must be at least 1';
+                if (isNaN(num)) return 'Must be a valid number.';
+                if (num < 1) return 'Amount must be at least 1.';
+                // Insufficient funds check
+                const account = formValues.account;
+                if (
+                  account &&
+                  formValues.type === 'Expense' &&
+                  num > account.balance
+                ) {
+                  return `Insufficient funds. Available: ${
+                    account.name
+                  } ${formatCurrency(account.balance)} `;
+                }
+                return true;
               },
             })}
             type='number'
@@ -337,6 +363,55 @@ export const TransactionForm = ({
                             <Icon className='w-4 h-4' />
                             <span>{c.name}</span>
                           </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error!]} />
+              )}
+            </Field>
+          )}
+        />
+        {/* Account */}
+        <Controller
+          name='account'
+          control={control}
+          rules={{
+            validate: (value) => value != null || 'Please select an account.',
+          }}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel>Account</FieldLabel>
+
+              <Select
+                onValueChange={(value) => {
+                  const selected = accounts.find((acc) => acc.id === value);
+                  if (selected) field.onChange(selected);
+                }}
+                value={field.value?.id ?? ''}
+              >
+                <SelectTrigger
+                  className={`${
+                    fieldState.invalid &&
+                    'border-destructive focus-visible:ring-destructive'
+                  }`}
+                >
+                  <SelectValue placeholder='Select account' />
+                </SelectTrigger>
+                <SelectContent align='end' position='popper'>
+                  {/* Existing Accounts */}
+                  <SelectGroup>
+                    <SelectLabel>Accounts</SelectLabel>
+                    {accounts.map((acc) => {
+                      return (
+                        <SelectItem key={acc.id} value={acc.id}>
+                          <span>{acc.name}</span>
+                          <span className='text-muted-foreground'>
+                            ({formatCurrency(acc.balance)})
+                          </span>
                         </SelectItem>
                       );
                     })}

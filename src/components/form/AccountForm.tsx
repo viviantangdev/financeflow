@@ -12,6 +12,8 @@ type AccountFormProps = {
   onCancel: () => void;
 };
 
+/// Form for account
+// - Add/Edit account /
 export const AccountForm = ({
   account,
   onSubmit,

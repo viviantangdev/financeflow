@@ -45,6 +45,9 @@ import { TransferForm } from '../form/TransferForm';
 
 type DialogMode = 'transaction' | 'category' | 'account' | 'transfer';
 
+/// Navigationbar
+// - Side bar /
+// - Used for tablet and desktop device /
 export const NavigationSidebar = () => {
   const { theme, toggleTheme } = useTheme();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
@@ -57,6 +60,7 @@ export const NavigationSidebar = () => {
     undefined
   );
 
+  /**Handle dialog */
   const openTransaction = () => {
     setDialogMode('transaction');
     setIsDialogOpen(true);
@@ -74,6 +78,7 @@ export const NavigationSidebar = () => {
     setIsDialogOpen(true);
   };
 
+  /**Handle transaction, category, account and transfer in Quick actions*/
   const handleAddTransaction = (data: TransactionBase) => {
     const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
     addTransaction({
@@ -230,6 +235,7 @@ export const NavigationSidebar = () => {
         <SidebarTrigger />
       </SidebarFooter>
 
+      {/**Dialogs */}
       {/* Add transaction Dialog */}
       {dialogMode === 'transaction' && (
         <FormDialog

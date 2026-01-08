@@ -17,6 +17,8 @@ type FormDialogProps = {
   footer?: React.ReactNode;
 };
 
+/// Dialog template
+// - Used with Form as the child /
 export const FormDialog = ({
   open,
   onOpenChange,

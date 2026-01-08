@@ -6,6 +6,8 @@ type ActionButtonProps = {
   onClick?: () => void;
 };
 
+/// Actionbutton with a Plus icon
+// - Used for "Add/Create" buttons /
 export const ActionButton = ({ text, onClick }: ActionButtonProps) => {
   return (
     <Button

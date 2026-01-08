@@ -13,11 +13,22 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { NavMenu } from '@/lib/navMenu';
-import { ArrowRightLeft, CreditCard, Menu, MoonIcon, Receipt, Star, SunIcon, Tags } from 'lucide-react';
+import {
+  ArrowRightLeft,
+  CreditCard,
+  Menu,
+  MoonIcon,
+  Receipt,
+  Star,
+  SunIcon,
+  Tags,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AccountForm } from '../form/AccountForm';
 import { CategoryForm } from '../form/CategoryForm';
+import { TransferForm } from '../form/TransferForm';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
 import {
@@ -27,11 +38,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
-import { AccountForm } from '../form/AccountForm';
-import { TransferForm } from '../form/TransferForm';
 
 type DialogMode = 'transaction' | 'category' | 'account' | 'transfer';
 
+/// Navigationbar
+// - Top bar /
+// - Used for mobile device /
 export const NavigationAppbar = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
@@ -50,6 +62,7 @@ export const NavigationAppbar = () => {
     setOpen(false);
   };
 
+  /**Handle dialog */
   const openAddTransaction = () => {
     setDialogMode('transaction');
     setIsDialogOpen(true);
@@ -67,6 +80,7 @@ export const NavigationAppbar = () => {
     setIsDialogOpen(true);
   };
 
+  /**Handle transaction, category, account and transfer in Quick actions*/
   const handleAddTransaction = (data: TransactionBase) => {
     const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
     addTransaction({
@@ -202,6 +216,7 @@ export const NavigationAppbar = () => {
         </SheetContent>
       </Sheet>
 
+      {/* Dialogs */}
       {/* Add transaction Dialog */}
       {dialogMode === 'transaction' && (
         <FormDialog

@@ -30,6 +30,8 @@ type TransferFormProps = {
   onCancel: () => void;
 };
 
+/// Form for transfer
+// - Add transfer /
 export const TransferForm = ({ onSubmit, onCancel }: TransferFormProps) => {
   const [calenderOpen, setCalenderOpen] = useState(false);
   const { accounts } = useAccount();

@@ -17,6 +17,8 @@ type CategoryFormProps = {
   onCancel: () => void;
 };
 
+/// Form for category
+// - Add/Edit category /
 export const CategoryForm = ({
   category,
   onSubmit,
