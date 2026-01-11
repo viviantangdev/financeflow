@@ -26,7 +26,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '1',
     description: 'Rent',
-    amount: -200,
+    amount: -100,
     type: 'Expense',
     category: { id: '1', name: 'Housing', iconName: 'House' },
     account: { id: '1', name: 'Debit', balance: 100 },
@@ -35,7 +35,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '2',
     description: 'Groceries',
-    amount: -90,
+    amount: -30,
     type: 'Expense',
     category: { id: '2', name: 'Food', iconName: 'Apple' },
     account: { id: '1', name: 'Debit', balance: 100 },
@@ -44,7 +44,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '3',
     description: 'Gas',
-    amount: -50,
+    amount: -10,
     type: 'Expense',
     category: { id: '3', name: 'Transportation', iconName: 'Bike' },
     account: { id: '1', name: 'Debit', balance: 100 },
@@ -53,7 +53,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '4',
     description: 'Clothing',
-    amount: -10,
+    amount: -5,
     type: 'Expense',
     category: { id: '4', name: 'Lifestyle', iconName: 'Shirt' },
     account: { id: '1', name: 'Debit', balance: 100 },
@@ -62,7 +62,7 @@ const DEFAULT_TRANSACTIONS: TransactionItem[] = [
   {
     id: '5',
     description: 'Movies',
-    amount: -20,
+    amount: -10,
     type: 'Expense',
     category: { id: '5', name: 'Entertainment', iconName: 'Clapperboard' },
     account: { id: '2', name: 'Saving', balance: 100 },
