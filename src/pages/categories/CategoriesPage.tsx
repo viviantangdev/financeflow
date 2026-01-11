@@ -14,13 +14,21 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import {
   useCategory,
   type CategoryBase,
   type CategoryItem,
 } from '@/context/categoryContext';
 import { useDialog } from '@/hooks/useDialog';
 import { iconMap } from '@/lib/icons';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Tags, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -36,24 +44,24 @@ export const CategoriesPage = () => {
     null
   );
 
+  /**Handle dialog */
   const openAdd = () => {
     setDialogMode('add');
     setSelectedCategory(null);
     setIsDialogOpen(true);
   };
-
   const openEdit = (category: CategoryItem) => {
     setDialogMode('edit');
     setSelectedCategory(category);
     setIsDialogOpen(true);
   };
-
   const openDelete = (category: CategoryItem) => {
     setDialogMode('delete');
     setSelectedCategory(category);
     setIsDialogOpen(true);
   };
 
+  /**Handle new, edit, delete categories*/
   const handleAdd = (data: CategoryBase) => {
     addCategory({ name: data.name, iconName: data.iconName });
     toast.success('Category has been created');
@@ -70,6 +78,44 @@ export const CategoriesPage = () => {
     toast.success('Category has been deleted');
   };
 
+  if (categories.length === 0)
+    return (
+      <>
+        <Card className='border-2 border-dashed bg-card'>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant='icon'>
+                <Tags />
+              </EmptyMedia>
+              <EmptyTitle>No categories Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any categories yet. Get started by
+                creating your first category.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <ActionButton onClick={openAdd} text={'Create category'} />
+            </EmptyContent>
+          </Empty>
+        </Card>
+        {/**Dialog */}
+        {/* New category dialog */}
+        {dialogMode === 'add' && (
+          <FormDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            title='New category'
+            description='Enter the name and select an icon for your new category.'
+          >
+            <CategoryForm
+              onSubmit={handleAdd}
+              onCancel={() => setIsDialogOpen(false)}
+            />
+          </FormDialog>
+        )}
+      </>
+    );
+
   return (
     <div className='flex flex-col gap-5'>
       <section>
@@ -82,9 +128,7 @@ export const CategoriesPage = () => {
             <Card key={item.id}>
               <CardHeader className='flex justify-between items-center flex-wrap gap-5'>
                 <CardTitle className='flex items-center flex-wrap gap-3'>
-                  <div className='iconBadge'>
-                    <Icon />
-                  </div>
+                  <Icon className='iconBadge' />
 
                   <span>{item.name}</span>
                 </CardTitle>

@@ -6,21 +6,14 @@ import { DashboardLatestTransactions } from './components/DashboardLatestTransac
 export const DashboardPage = () => {
   return (
     <div className='space-y-10'>
-      {/* <section>
-        <DashboardTotal />
-      </section> */}
       <section>
-        <div className='flex gap-3 h-60 flex-wrap'>
-          <div className='flex-1 h-full'>
-            <DashboardBalance />
-          </div>
-          <div className='flex-1 h-full'>
-            <DashboardCashflow />
-          </div>
-        </div>
+        <DashboardBalance />
       </section>
       <section>
         <DashboardAccounts />
+      </section>
+      <section>
+        <DashboardCashflow />
       </section>
       <section>
         <DashboardLatestTransactions />

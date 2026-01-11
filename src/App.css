@@ -167,11 +167,11 @@ button {
 }
 
 .iconBadge {
-  @apply rounded-full p-3 bg-linear-to-br from-blue-400 to-indigo-500 
+  @apply rounded-full h-10 w-10 p-2 bg-linear-to-br from-blue-400 to-indigo-500 
          border border-blue-300/50 text-white;
 
   @variant dark {
-    @apply rounded-full p-3  bg-linear-to-br from-blue-500/90 to-indigo-700/90 
+    @apply bg-linear-to-br from-blue-500/90 to-indigo-700/90 
          border border-white/10 text-white;
   }
 }

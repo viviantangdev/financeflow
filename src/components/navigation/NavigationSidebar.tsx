@@ -105,7 +105,7 @@ export const NavigationSidebar = () => {
   };
 
   return (
-    <Sidebar collapsible='icon' variant='floating'>
+    <Sidebar collapsible='icon' variant='floating' >
       <SidebarHeader>
         <SidebarMenuButton asChild>
           <NavLink to='/'>

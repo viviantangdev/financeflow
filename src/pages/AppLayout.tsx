@@ -16,15 +16,15 @@ export const AppLayout = () => {
   const PageIcon = currentItem!.icon;
 
   return (
-    <div className=' w-screen md:flex '>
+    <div className=' w-screen md:flex'>
       <NavigationSidebar />
       <NavigationAppbar />
-      <div className='flex-1 my-2 rounded-lg px-3 py-6  flex flex-col gap-8'>
+      <div className='md:flex-1 overflow-auto my-2 rounded-lg px-3 py-6 flex flex-col gap-8'>
         <header className='flex items-center gap-2'>
-          <PageIcon  />
+          <PageIcon />
           <h2 className='text-2xl'>{pageTitle}</h2>
         </header>
-        <main className='flex-1'>
+        <main>
           <Outlet />
         </main>
       </div>

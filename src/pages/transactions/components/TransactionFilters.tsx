@@ -84,7 +84,6 @@ export function TransactionFilters({ table }: TransactionFiltersProps) {
       </Tabs>
 
       {/* Category Popover Filter */}
-
       <Popover>
         <PopoverTrigger asChild className='bg-muted!'>
           <Button variant='outline' size='default' className='justify-between'>

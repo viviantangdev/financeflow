@@ -11,6 +11,15 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import {
   useTransaction,
   type TransactionBase,
@@ -18,46 +27,54 @@ import {
 } from '@/context/transactionContext';
 import { useDialog } from '@/hooks/useDialog';
 import { formatCurrency } from '@/lib/helpers';
-import { Trash2 } from 'lucide-react';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type SortingState,
+} from '@tanstack/react-table';
+import { Receipt, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { TransactionForm } from '../../components/form/TransactionForm';
-import { TransactionTableCore } from './components/table/TransactionTableCore';
-
-type DialogMode = 'add' | 'edit' | 'view' | 'delete';
+import { TableColumnsWithActions } from './components/table/TableColumns';
+import { TransactionFilters } from './components/TransactionFilters';
+import { TransactionTable } from './components/TransactionTable';
 
 export const TransactionsPage = () => {
-  const { addTransaction, updateTransaction, deleteTransaction } =
+  const { transactions, addTransaction, updateTransaction, deleteTransaction } =
     useTransaction();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
-  const [dialogMode, setDialogMode] = useState<DialogMode>('add');
+  const [dialogMode, setDialogMode] = useState<
+    'add' | 'edit' | 'view' | 'delete' | undefined
+  >(undefined);
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionItem | null>(null);
 
+  /**Handle dialog */
   const openAdd = () => {
     setDialogMode('add');
     setSelectedTransaction(null);
     setIsDialogOpen(true);
   };
-
   const openView = (transaction: TransactionItem) => {
     setDialogMode('view');
     setSelectedTransaction(transaction);
     setIsDialogOpen(true);
   };
-
   const openEdit = (transaction: TransactionItem) => {
     setDialogMode('edit');
     setSelectedTransaction(transaction);
     setIsDialogOpen(true);
   };
-
   const openDelete = (transaction: TransactionItem) => {
     setDialogMode('delete');
     setSelectedTransaction(transaction);
     setIsDialogOpen(true);
   };
 
+  /**Handle new, edit, delete transaction*/
   const handleAddTransaction = (data: TransactionBase) => {
     const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
     addTransaction({
@@ -70,7 +87,6 @@ export const TransactionsPage = () => {
     });
     toast.success('Transaction has been created');
   };
-
   const handleEdit = (data: TransactionBase) => {
     const signedAmount = data.type === 'Income' ? data.amount : -data.amount;
     updateTransaction(selectedTransaction!.id, {
@@ -82,11 +98,64 @@ export const TransactionsPage = () => {
     });
     toast.success('Transaction has been updated');
   };
-
   const handleDelete = (item: TransactionItem) => {
     deleteTransaction(item.id);
     toast.success('Transaction has been deleted');
   };
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const table = useReactTable({
+    data: transactions,
+    columns: TableColumnsWithActions({
+      onEdit: openEdit,
+      onDelete: openDelete,
+      onView: openView,
+    }),
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    state: { sorting },
+  });
+
+  if (transactions.length === 0)
+    return (
+      <>
+        <Card className='border-2 border-dashed bg-card'>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant='icon'>
+                <Receipt />
+              </EmptyMedia>
+              <EmptyTitle>No transactions Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any transactions yet. Get started by
+                creating your first transaction.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <ActionButton onClick={openAdd} text={'Create transaction'} />
+            </EmptyContent>
+          </Empty>
+        </Card>
+        {/**Dialogs */}
+        {/* New transaction dialog */}
+        {isDialogOpen && (
+          <FormDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            title='New transaction'
+            description='Enter the details for your new transaction.'
+          >
+            <TransactionForm
+              onSubmit={handleAddTransaction}
+              onCancel={() => setIsDialogOpen(!isDialogOpen)}
+            />
+          </FormDialog>
+        )}
+      </>
+    );
 
   return (
     <div className='space-y-10'>
@@ -94,13 +163,13 @@ export const TransactionsPage = () => {
         <ActionButton text='New transaction' onClick={openAdd} />
       </section>
 
-      {/* Table with filters */}
+      {/* Filters */}
       <section>
-        <TransactionTableCore
-          onEdit={openEdit}
-          onDelete={openDelete}
-          onView={openView}
-        />
+        <TransactionFilters table={table} />
+      </section>
+      {/**Table */}
+      <section>
+        <TransactionTable table={table} />
       </section>
 
       {/* Add transaction dialog */}

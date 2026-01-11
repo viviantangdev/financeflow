@@ -11,7 +11,7 @@ import { formatCurrency } from '@/lib/helpers';
 export const DashboardBalance = () => {
   const { totalAccountBalance } = useAccount();
   return (
-    <Card className='h-full'>
+    <Card className='md:h-full'>
       <CardHeader>
         <CardTitle className='text-center'>Total balance</CardTitle>
         <CardDescription className='text-center'>
